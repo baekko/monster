@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>배경 전환</title>
-  <style>
-   body {
-            background-image: url("monster9.jpg"); 
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed; /* 배경 이미지 고정 */
-            font-family: Arial, sans-serif;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정답 입력</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Courier, sans-serif;
         }
-    .button-container {
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        .button-container {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -27,14 +34,14 @@
             font-weight: bold;
             width: 65px;
             cursor: pointer;
-            background-color: rgba(0, 0, 0, 0.5); /* 배경만 반투명 */
+            background-color:rgba(0, 0, 0, 0.5); /* 배경만 반투명 */
             color: white;
             border: none;
             border-radius: 5px;
             transition: background-color 0.3s;
             opacity: 0;
             visibility: hidden;
-            animation: showButton 0s ease-in 10s forwards;
+            animation: showButton 0s ease-in 8s forwards;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
         }
         .next-button:hover {
@@ -55,25 +62,25 @@
                 padding: 4px 6px;
             }
         }
-  </style>
+    </style>
 </head>
 <body>
-<div class="button-container">
+    <video class="video-background" autoplay muted playsinline id="bg-video">
+        <source src="monster3.mp4" type="video/mp4">  <!-- 망고보드 동영상 URL 넣기 -->
+    </video>
+    
+    <div class="button-container">
         <button class="next-button" onclick="goToNextPage()">다음</button>
     </div>
-<script>
-  // 이미지 전환 타이밍
-  setTimeout(() => {
-    document.body.style.backgroundImage = "url('monster10.jpg')";
-  }, 5000); // 5초 뒤
-
-  setTimeout(() => {
-    document.body.style.backgroundImage = "url('monster11.jpg')";
-  }, 8000); // 그 후 3초 뒤 (총 8초 후)
-  function goToNextPage() {
-            window.location.href = "https://baekko.github.io/monster/monster12.html"; 
+    
+    <script>  
+        function goToNextPage() {
+            window.location.href = "https://baekko.github.io/monster/monster11.html"; // 이동할 페이지 설정
         }
-</script>
-
+        document.getElementById('bg-video').onended = function() {
+            this.pause(); // 동영상 재생이 끝나면 정지
+        };
+    </script>
 </body>
 </html>
+
