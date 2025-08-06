@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>반납일 입력</title>
+  <style>
+    body {
+            background-image: url("monster20.jpg"); 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+
+    .container {
+      background: #3a3a3a;
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 110px;
+    }
+
+    .title {
+      background: #d3cbbf;
+      padding: 8px 50px;
+      border-radius: 10px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .digits {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .digit {
+      width: 40px;
+      height: 80px;
+      background: black;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .seg {
+      fill: #300000;
+      opacity: 0.2;
+    }
+
+    .on {
+      fill: red;
+      opacity: 1;
+    }
+
+    .label {
+      color: white;
+      font-weight: bold;
+    }
+
+    .submit-button {
+      position: fixed;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .button-container {
+      position: fixed;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    button {
+      padding: 4px 6px;
+      width: 65px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+      background-color: orange;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.466);
+    }
+
+    button:disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      padding: 15px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .modal-content {
+      text-align: center;
+    }
+
+    .close {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .digit {
+        width: 40px;
+        height: 75px;
+      }
+
+      .label {
+        font-size: 14px;
+      }
+
+      button {
+        font-size: 12px;
+        padding: 4px 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">반납일 (Return day)</div>
+    <div class="digits">
+      <div class="digit" id="d0" onclick="nextDigit(0)"></div>
+      <div class="digit" id="d1" onclick="nextDigit(1)"></div>
+      <div class="label">월</div>
+      <div class="digit" id="d2" onclick="nextDigit(2)"></div>
+      <div class="digit" id="d3" onclick="nextDigit(3)"></div>
+      <div class="label">일</div>
+    </div>
+  </div>
+
+  <button class="submit-button" onclick="checkAnswer()">입력</button>
+
+  <div class="button-container">
+    <button id="hint1" onclick="useHint1()">힌트 1</button>
+    <button id="hint2" onclick="useHint2()" disabled>힌트 2</button>
+    <button id="answerBtn" onclick="showAnswerModal()" disabled>정답 보기</button>
+    <button onclick="showScore()">점수 보기</button>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <p id="modalText"></p>
+    </div>
+  </div>
+
+  <script>
+    const digits = [0, 0, 0, 0];
+    const correctAnswer = "0816";
+    const segmentMap = [
+      [1,1,1,1,1,1,0], [0,1,1,0,0,0,0], [1,1,0,1,1,0,1], [1,1,1,1,0,0,1], [0,1,1,0,0,1,1],
+      [1,0,1,1,0,1,1], [1,0,1,1,1,1,1], [1,1,1,0,0,0,0], [1,1,1,1,1,1,1], [1,1,1,1,0,1,1]
+    ];
+
+    const segmentPolygons = [
+      "20,10 30,0 90,0 100,10 90,20 30,20", // A
+      "100,10 110,20 110,90 100,100 90,90 90,20", // B
+      "100,100 110,110 110,180 100,190 90,180 90,110", // C
+      "20,190 30,180 90,180 100,190 90,200 30,200", // D
+      "20,100 30,110 30,180 20,190 10,180 10,110", // E
+      "20,10 30,20 30,90 20,100 10,90 10,20", // F
+      "20,100 30,90 90,90 100,100 90,110 30,110" // G
+    ];
+
+    function renderDigit(index, value) {
+      const el = document.getElementById(`d${index}`);
+      const segments = segmentMap[value];
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 120 200");
+      for (let i = 0; i < 7; i++) {
+        const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        poly.setAttribute("points", segmentPolygons[i]);
+        poly.setAttribute("class", segments[i] ? "seg on" : "seg");
+        svg.appendChild(poly);
+      }
+      el.innerHTML = "";
+      el.appendChild(svg);
+    }
+
+    function nextDigit(index) {
+      digits[index] = (digits[index] + 1) % 10;
+      renderDigit(index, digits[index]);
+    }
+
+    window.onload = () => {
+      for (let i = 0; i < 4; i++) {
+        renderDigit(i, digits[i]);
+      }
+    }
+
+    let score = localStorage.getItem("score") ? parseInt(localStorage.getItem("score")) : 100;
+    let hint1Used = false;
+    let hint2Used = false;
+    let answerUsed = false;
+
+    function updateScore(points) {
+      score += points;
+      localStorage.setItem("score", score);
+    }
+
+    function useHint1() {
+      document.getElementById('modalText').innerText = "도서관 주간은 4월이야!";
+      document.getElementById('modal').style.display = "block";
+      document.getElementById('hint2').disabled = false;
+      if (!hint1Used) {
+        updateScore(-1);
+        hint1Used = true;
+      }
+    }
+
+    function useHint2() {
+      document.getElementById('modalText').innerText = "마지막 날은 16일이야.";
+      document.getElementById('modal').style.display = "block";
+      document.getElementById('answerBtn').disabled = false;
+      if (!hint2Used) {
+        updateScore(-1);
+        hint2Used = true;
+      }
+    }
+
+    function showAnswerModal() {
+      document.getElementById('modalText').innerText = "정답은 0816이야!";
+      document.getElementById('modal').style.display = "block";
+      if (!answerUsed) {
+        updateScore(-1);
+        answerUsed = true;
+      }
+    }
+
+    function showScore() {
+      document.getElementById('modalText').innerText = "현재 점수: " + score + "점";
+      document.getElementById('modal').style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    function checkAnswer() {
+      const input = digits.join("");
+      if (input === correctAnswer) {
+        window.location.href = "https://baekko.github.io/baekkohouse/ctm33.html";
+      } else {
+        document.getElementById("modalText").innerText = "다시 확인해봐!";
+        document.getElementById("modal").style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>
