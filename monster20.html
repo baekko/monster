@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>반납일 입력</title>
+  <title>몬스터도서관</title>
   <style>
     html, body {
     height: 100vh;
@@ -243,7 +243,7 @@
     }
 
     function useHint1() {
-      document.getElementById('modalText').innerText = "도서관 주간은 4월이야!";
+      document.getElementById('modalText').innerText = "슬로모로힌트1";
       document.getElementById('modal').style.display = "block";
       document.getElementById('hint2').disabled = false;
       if (!hint1Used) {
@@ -253,7 +253,7 @@
     }
 
     function useHint2() {
-      document.getElementById('modalText').innerText = "마지막 날은 16일이야.";
+      document.getElementById('modalText').innerText = "슬로모로힌트2";
       document.getElementById('modal').style.display = "block";
       document.getElementById('answerBtn').disabled = false;
       if (!hint2Used) {
@@ -263,7 +263,7 @@
     }
 
     function showAnswerModal() {
-      document.getElementById('modalText').innerText = "정답은 0816이야!";
+      document.getElementById('modalText').innerText = "0816";
       document.getElementById('modal').style.display = "block";
       if (!answerUsed) {
         updateScore(-1);
@@ -283,15 +283,16 @@
     function checkAnswer() {
       const input = digits.join("");
       if (input === correctAnswer) {
-        window.location.href = "https://baekko.github.io/baekkohouse/ctm33.html";
+        window.location.href = "https://baekko.github.io/monster/monster24.html";
       } else {
-        document.getElementById("modalText").innerText = "다시 확인해봐!";
+        document.getElementById("modalText").innerText = "오답";
         document.getElementById("modal").style.display = "block";
       }
     }
   </script>
 </body>
 </html>
+
 
 
 
