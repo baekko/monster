@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>튜토리얼 – 정답 입력 안내</title>
+<style>
+  :root{
+    --bubble-bg:#f6b700; --bubble-fg:#1a1a1a;
+    --ui-max:375px;
+  }
+  body{
+    margin:0;height:100vh;display:flex;justify-content:center;align-items:center;
+    font-family:Arial, sans-serif;background:center/cover no-repeat url("monster200.jpg");
+    overflow:hidden;
+  }
+
+  .demo-block{ pointer-events:none; }
+
+  .container{
+    position:fixed; left:50%; transform:translateX(-50%);
+    bottom:260px; width:60%; max-width:var(--ui-max);
+    background:rgba(0,0,0,.4); padding:10px; border-radius:10px; text-align:center;
+  }
+  .input-row{ display:flex; gap:10px; justify-content:center; align-items:center; }
+  input[type="text"]{
+    width:60%; padding:8px; font-size:14px; border:none; border-radius:5px; background:#fff;
+  }
+
+  .btn{
+    width:65px; padding:4px 6px; font-size:12px; font-weight:700; color:#fff;
+    border:none; border-radius:5px; box-shadow:0 4px 6px rgba(0,0,0,.46);
+  }
+  .btn.orange{ background:orange; }
+  .btn.gray{ background:#6d5d5d; }
+
+  .button-container{
+    position:fixed; left:50%; transform:translateX(-50%);
+    bottom:220px; display:flex; gap:10px;
+  }
+
+  /* ===== 내비게이션 버튼: 하단 중앙 + 입력/점수보기 스타일(검정색) ===== */
+  .nav{
+    position:fixed; left:50%; transform:translateX(-50%);
+    bottom:18px; display:flex; gap:10px; z-index:40;
+    visibility:hidden; opacity:0; transition:.25s;
+  }
+  .nav.show{ visibility:visible; opacity:1; }
+  .navbtn{
+    pointer-events:auto;
+    background:orange; color:#fff;                /* 검정색 */
+    border:none; border-radius:5px;             /* 입력/점수보기와 동일한 둥근 모서리 */
+    padding:8px 14px; font-weight:700;          /* 버튼 크기 약간 키움 */
+    box-shadow:0 4px 6px rgba(0,0,0,.46);       /* 동일 그림자 */
+  }
+
+  /* ===== 말풍선 ===== */
+  .bubble{
+    position:fixed; z-index:30; max-width:min(220px, 88vw);
+    background:var(--bubble-bg); color:var(--bubble-fg);
+    padding:8px 10px; border-radius:12px; font-weight:700; line-height:1.32;
+    box-shadow:0 8px 18px rgba(0,0,0,.25);
+    opacity:0; transform:scale(.98);
+    transition:opacity .16s ease, transform .16s ease, left .05s, top .05s;
+    word-break:keep-all;
+  }
+  .bubble.show{ opacity:1; transform:scale(1); }
+  .bubble::after{ content:""; position:absolute; width:0; height:0; border:10px solid transparent; }
+  .bubble[data-pos="top"]::after{ bottom:-20px; left:var(--arrow-x,50%); transform:translateX(-50%); border-top-color:var(--bubble-bg); }
+  .bubble[data-pos="bottom"]::after{ top:-20px; left:var(--arrow-x,50%); transform:translateX(-50%); border-bottom-color:var(--bubble-bg); }
+  .bubble[data-pos="left"]::after{ right:-20px; top:var(--arrow-y,50%); transform:translateY(-50%); border-left-color:var(--bubble-bg); }
+  .bubble[data-pos="right"]::after{ left:-20px; top:var(--arrow-y,50%); transform:translateY(-50%); border-right-color:var(--bubble-bg); }
+
+  @media (max-width:768px){
+    .container{ width:80%; }
+    input[type="text"]{ font-size:12px; }
+    .btn{ font-size:12px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- UI -->
+  <div class="container demo-block" id="uiBox" aria-hidden="true">
+    <div class="input-row">
+      <input id="answer" type="text" placeholder="여기에 정답을 입력" />
+      <button id="submitBtn" class="btn orange">입력</button>
+    </div>
+  </div>
+
+  <div class="button-container demo-block" aria-hidden="true">
+    <button id="hint1" class="btn orange">힌트 1</button>
+    <button id="hint2" class="btn gray">힌트 2</button>
+    <button id="answerBtn" class="btn gray">정답 보기</button>
+    <button id="scoreBtn" class="btn orange">점수 보기</button>
+  </div>
+
+  <div id="bubble" class="bubble" role="status" aria-live="polite"></div>
+
+  <!-- 하단 중앙 내비 -->
+  <div id="nav" class="nav">
+    <button id="next" class="navbtn">이해 했어!</button>
+    <button id="restart" class="navbtn">미안 다시!</button>
+  </div>
+
+<script>
+(function(){
+  const DISPLAY_TIME = 5000;
+  const GAP = 6;
+  const NEXT_URL = "monster16.html";
+
+  const steps = [
+    { target:"#answer",    pos:"top", text:"1. 정답을 아래 흰색 창에 입력하세요.", offsetY:2 },
+    { target:"#submitBtn", pos:"top", text:"2. 입력 버튼을 눌러주세요." },
+    { target:"#hint1",     pos:"top", text:"첫 번째 힌트를 사용할 수 있습니다. -1점" },
+    { target:"#hint2",     pos:"top", text:"두 번째 힌트는 첫 번째 힌트 후 사용 가능합니다. -1점" },
+    { target:"#answerBtn", pos:"top", text:"정답 보기는 모든 힌트 사용 후 가능합니다. -1점" },
+    { target:"#scoreBtn",  pos:"top", text:"점수 보기는 언제든 확인할 수 있습니다." }
+  ];
+
+  const bubble = document.getElementById("bubble");
+  const uiBox  = document.getElementById("uiBox");
+  const nav    = document.getElementById("nav");
+  const nextBtn = document.getElementById("next");
+  const restartBtn = document.getElementById("restart");
+
+  let playing = false, timer = null, idx = -1;
+  const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
+
+  function placeBubble(targetEl, pos, opt={}){
+    const r  = targetEl.getBoundingClientRect();
+    const cr = uiBox.getBoundingClientRect();
+    bubble.style.display = "block";
+    const bw = bubble.offsetWidth, bh = bubble.offsetHeight;
+
+    let left, top;
+    if(pos==="top"){
+      left = r.left + r.width/2 - bw/2;
+      top  = r.top - GAP - bh;
+    }else if(pos==="bottom"){
+      left = r.left + r.width/2 - bw/2;
+      top  = r.bottom + GAP;
+    }else if(pos==="left"){
+      left = r.left - GAP - bw;
+      top  = r.top + r.height/2 - bh/2;
+    }else{
+      left = r.right + GAP;
+      top  = r.top + r.height/2 - bh/2;
+    }
+
+    if(opt.offsetX) left += opt.offsetX;
+    if(opt.offsetY) top  += opt.offsetY;
+
+    const minL = cr.left + 6;
+    const maxL = cr.right - bw - 6;
+    left = clamp(left, minL, maxL);
+    top  = clamp(top, 8, innerHeight - bh - 8);
+
+    bubble.style.left = left + "px";
+    bubble.style.top  = top  + "px";
+    bubble.dataset.pos = pos;
+
+    if(pos==="top" || pos==="bottom"){
+      const cx = r.left + r.width/2;
+      const arrowX = clamp(cx - left, 14, bw - 14);
+      bubble.style.setProperty('--arrow-x', (arrowX / bw * 100) + '%');
+    }else{
+      const cy = r.top + r.height/2;
+      const arrowY = clamp(cy - top, 14, bh - 14);
+      bubble.style.setProperty('--arrow-y', (arrowY / bh * 100) + '%');
+    }
+  }
+
+  function show(step){
+    const t = document.querySelector(step.target);
+    bubble.textContent = step.text;
+    bubble.classList.remove("show");
+    placeBubble(t, step.pos, { offsetX: step.offsetX||0, offsetY: step.offsetY||0 });
+    bubble.classList.add("show");
+
+    // 1번 단계는 초기 300ms 동안 위치 재고정(모바일 주소창/폰트 로딩 보정)
+    if (step.target === "#answer") {
+      let ticks = 0;
+      (function lock(){
+        if (idx !== 0) return;
+        placeBubble(t, "top", { offsetY: step.offsetY||0 });
+        if (++ticks < 6) setTimeout(lock, 50);
+      })();
+    }
+  }
+
+  function hide(){
+    bubble.classList.remove("show");
+    setTimeout(()=>{ bubble.style.display="none"; }, 140);
+  }
+
+  const wait = ms => new Promise(r=>{ clearTimeout(timer); timer=setTimeout(r, ms); });
+
+  async function play(){
+    playing = true; idx=-1; nav.classList.remove("show");
+    clearTimeout(timer); hide();
+    await new Promise(res=>requestAnimationFrame(()=>res()));
+
+    for(let i=0;i<steps.length;i++){
+      if(!playing) return;
+      idx=i; show(steps[i]);
+      await wait(DISPLAY_TIME);
+      hide();
+      await wait(160);
+    }
+    playing = false;
+    nav.classList.add("show");
+  }
+
+  addEventListener("resize", ()=>{
+    if(bubble.style.display==="block" && idx>=0){
+      const s = steps[idx], t = document.querySelector(s.target);
+      placeBubble(t, s.pos, { offsetX:s.offsetX||0, offsetY:s.offsetY||0 });
+    }
+  });
+
+  nextBtn.addEventListener("click", ()=> location.href = "https://baekko.github.io/monster/monster14.html");
+  restartBtn.addEventListener("click", ()=>{ playing=false; clearTimeout(timer); hide(); setTimeout(()=>{ play(); }, 50); });
+
+  play();
+})();
+</script>
+</body>
+</html>
