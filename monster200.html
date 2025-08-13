@@ -42,16 +42,14 @@
   /* 하단 중앙 내비 (검정색, 입력/점수보기 버튼 스타일) */
   .nav{
     position:fixed; left:50%; transform:translateX(-50%);
-    bottom:18px; display:flex; gap:10px; z-index:40;
+    bottom:18px; display:flex; gap:20px; z-index:40;
     visibility:hidden; opacity:0; transition:.25s;
   }
   .nav.show{ visibility:visible; opacity:1; }
   .navbtn{
-    pointer-events:auto;
-    background:orange; color:#fff;
-    border:none; border-radius:5px;
-    padding:8px 14px; font-weight:700;
-    box-shadow:0 4px 6px rgba(0,0,0,.46);
+    padding:4px 6px;font-size:20px;font-weight:bold;width:130px;cursor:pointer;
+      background-color:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:5px;
+      transition:background-color .3s;box-shadow:0 4px 6px rgba(0,0,0,.2);
   }
 
   /* 말풍선 */
@@ -259,3 +257,4 @@
 </script>
 </body>
 </html>
+
