@@ -24,7 +24,7 @@
       transform:translate3d(0,0,0);z-index:1000;
     }
     .next-button{
-      padding:4px 6px;font-size:12px;font-weight:bold;width:65px;cursor:pointer;
+      padding:4px 6px;font-size:20px;font-weight:bold;width:65px;cursor:pointer;
       background-color:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:5px;
       transition:background-color .3s;box-shadow:0 4px 6px rgba(0,0,0,.2);
     }
@@ -33,7 +33,7 @@
     /* 봉인 버튼: 오른쪽 하단 고정 */
     .seal-button{
       position:fixed;right:50px;bottom:20px;z-index:1001;
-      width:40px;height:40px; /* 다음 버튼 높이 2배 정도 */
+      width:50px;height:50px; /* 다음 버튼 높이 2배 정도 */
       background:url("monsterbook5.png") center/cover no-repeat;
       background-color:rgba(0,0,0,0.5);
       border:none;border-radius:6px;cursor:pointer;
@@ -82,7 +82,7 @@
       // 없으면 열기
       const overlay = document.createElement('div');
       overlay.className = 'overlay';
-      overlay.innerHTML = `<img src="monsterindex1.png" alt="Monster Index">`;
+      overlay.innerHTML = `<img src="monsterindex2.png" alt="Monster Index">`;
       // 모달 아무 곳이나 터치하면 닫기
       overlay.addEventListener('click', () => overlay.remove());
       document.body.appendChild(overlay);
@@ -91,6 +91,7 @@
 </body>
 
 </html>
+
 
 
 
