@@ -20,7 +20,7 @@
   .container{
     position:fixed; left:50%; transform:translateX(-50%);
     bottom:260px; width:60%; max-width:var(--ui-max);
-    background:rgba(0,0,0,.4); padding:10px; border-radius:10px; text-align:center;
+    background:rgba(0,0,0,0.4); padding:10px; border-radius:10px; text-align:center;
   }
   .input-row{ display:flex; gap:10px; justify-content:center; align-items:center; }
   input[type="text"]{
@@ -29,7 +29,7 @@
 
   .btn{
     width:65px; padding:4px 6px; font-size:12px; font-weight:700; color:#fff;
-    border:none; border-radius:5px; box-shadow:0 4px 6px rgba(0,0,0,.46);
+    border:none; border-radius:5px; box-shadow:0 4px 6px rgba(0,0,0,0.46);
   }
   .btn.orange{ background:orange; }
   .btn.gray{ background:#6d5d5d; }
@@ -48,16 +48,16 @@
   .nav.show{ visibility:visible; opacity:1; }
   .navbtn{
     padding:4px 6px;font-size:20px;font-weight:bold;width:130px;cursor:pointer;
-      background-color:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:5px;
-      transition:background-color .3s;box-shadow:0 4px 6px rgba(0,0,0,.2);
+    background-color:yellow; color:black; border:none;border-radius:5px;
+    transition:background-color .3s;box-shadow:0 4px 6px rgba(0,0,0);
   }
 
   /* 말풍선 */
   .bubble{
     position:fixed; z-index:30; max-width:min(220px, 88vw);
     background:var(--bubble-bg); color:var(--bubble-fg);
-    padding:8px 10px; border-radius:12px; font-weight:700; line-height:1.32;
-    box-shadow:0 8px 18px rgba(0,0,0,.25);
+    padding:8px 10px; border-radius:12px; font-weight:700; line-height:1.32; font-size:13px;
+    box-shadow:0 8px 18px rgba(0,0,0,0.25);
     opacity:0; transform:scale(.98);
     transition:opacity .16s ease, transform .16s ease, left .05s, top .05s;
     word-break:keep-all;
@@ -69,6 +69,8 @@
   .bubble[data-pos="bottom"]::after{ top:-20px; left:var(--arrow-x,50%); transform:translateX(-50%); border-bottom-color:var(--bubble-bg); }
   .bubble[data-pos="left"]::after{ right:-20px; top:var(--arrow-y,50%); transform:translateY(-50%); border-left-color:var(--bubble-bg); }
   .bubble[data-pos="right"]::after{ left:-20px; top:var(--arrow-y,50%); transform:translateY(-50%); border-right-color:var(--bubble-bg); }
+  /* 꼬리 없는 말풍선(추가) */
+  .bubble.no-tail::after{ display:none; }
 
   @media (max-width:768px){
     .container{ width:80%; }
@@ -107,15 +109,16 @@
   const INITIAL_DELAY = 5000;  // 페이지 로딩 후 첫 말풍선까지 대기
   const DISPLAY_TIME  = 5000;  // 각 말풍선 유지 시간
   const GAP = 6;
-  const NEXT_URL = "monster16.html";
 
+  // 기존 1~6 + 7번째(꼬리없음/아래 배치)
   const steps = [
-    { target:"#answer",    pos:"top", text:"1. 정답을 아래 흰색 창에 입력하세요.", offsetY:2 },
-    { target:"#submitBtn", pos:"top", text:"2. 입력 버튼을 눌러주세요." },
-    { target:"#hint1",     pos:"top", text:"첫 번째 힌트를 사용할 수 있습니다. -1점" },
-    { target:"#hint2",     pos:"top", text:"두 번째 힌트는 첫 번째 힌트 사용 후 가능합니다. -1점" },
-    { target:"#answerBtn", pos:"top", text:"정답 보기는 모든 힌트 사용 후 가능합니다. -1점" },
-    { target:"#scoreBtn",  pos:"top", text:"점수 보기는 언제든 확인할 수 있습니다." }
+    { target:"#answer",    pos:"top", text:"1. 먼저 답을 아래 흰색 창에 입력해", offsetY:2 },
+    { target:"#submitBtn", pos:"top", text:"2. 답을 입력했으면 입력 버튼을 눌러" },
+    { target:"#hint1",     pos:"top", text:"잘 모를 때는 힌트를 사용할 수 있어 -1점" },
+    { target:"#hint2",     pos:"top", text:"두 번째 힌트는 첫 번째 힌트를 보고 난 후 사용할 수 있어 -1점" },
+    { target:"#answerBtn", pos:"top", text:"정답 보기는 모든 힌트를 보고 난 후 사용할 수 있어 -1점" },
+    { target:"#scoreBtn",  pos:"top", text:"점수 보기는 언제든 확인할 수 있어" },
+    { free:true, text:"문제마다 답을 입력하는 방식이 다를 수 있는데 그건 그때마다 알려줄게!"}
   ];
 
   const bubble = document.getElementById("bubble");
@@ -126,7 +129,7 @@
 
   let timer = null;
   let idx = -1;
-  let runStamp = 0; // 재시작 시 증가: 이전 타이머 콜백을 무력화
+  let runStamp = 0; // 재시작 시 증가: 이전 타이머 콜백 무력화
 
   const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
 
@@ -177,17 +180,40 @@
     }
   }
 
+  // 7번째 전용: 버튼 UI 아래 중앙, 꼬리 없음
+  function placeBubbleBelowUI(){
+    const buttons = document.querySelector(".button-container");
+    const br = buttons ? buttons.getBoundingClientRect() : { bottom: innerHeight*0.6 };
+    bubble.style.display = "block";
+    const bw = bubble.offsetWidth, bh = bubble.offsetHeight;
+
+    let left = innerWidth/2 - bw/2;
+    let top  = br.bottom + 14;                 // 버튼 아래 14px
+    top = clamp(top, 8, innerHeight - bh - 72);// 하단 네비 고려
+
+    bubble.style.left = left + "px";
+    bubble.style.top  = top  + "px";
+    bubble.dataset.pos = "none";
+  }
+
   function show(step, stamp){
     if (stamp !== runStamp) return; // 이전 실행 무시
-    const t = document.querySelector(step.target);
     bubble.textContent = step.text;
     bubble.classList.remove("show");
-    placeBubble(t, step.pos, { offsetX: step.offsetX||0, offsetY: step.offsetY||0 });
+    bubble.classList.toggle("no-tail", !!step.free);
+
+    if(step.free){
+      placeBubbleBelowUI();
+    }else{
+      const t = document.querySelector(step.target);
+      placeBubble(t, step.pos, { offsetX: step.offsetX||0, offsetY: step.offsetY||0 });
+    }
     bubble.classList.add("show");
 
     // 1번 단계는 초기 300ms 동안 위치 재고정
-    if (step.target === "#answer") {
+    if (!step.free && step.target === "#answer") {
       let ticks = 0;
+      const t = document.querySelector(step.target);
       (function lock(){
         if (stamp !== runStamp || idx !== 0) return;
         placeBubble(t, "top", { offsetY: step.offsetY||0 });
@@ -235,11 +261,17 @@
 
   addEventListener("resize", ()=>{
     if(bubble.style.display==="block" && idx>=0){
-      const s = steps[idx], t = document.querySelector(s.target);
-      placeBubble(t, s.pos, { offsetX:s.offsetX||0, offsetY:s.offsetY||0 });
+      const s = steps[idx];
+      if(s.free){
+        placeBubbleBelowUI();
+      }else{
+        const t = document.querySelector(s.target);
+        placeBubble(t, s.pos, { offsetX:s.offsetX||0, offsetY:s.offsetY||0 });
+      }
     }
   });
 
+  // 원본 링크 유지
   nextBtn.addEventListener("click", ()=> location.href = "https://baekko.github.io/monster/monster14.html");
   restartBtn.addEventListener("click", ()=>{
     ++runStamp;           // 이전 타이머/콜백 전부 무효화
@@ -257,4 +289,5 @@
 </script>
 </body>
 </html>
+
 
