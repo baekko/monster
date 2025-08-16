@@ -71,6 +71,9 @@
   .bubble[data-pos="right"]::after{ left:-20px; top:var(--arrow-y,50%); transform:translateY(-50%); border-right-color:var(--bubble-bg); }
   /* 꼬리 없는 말풍선(추가) */
   .bubble.no-tail::after{ display:none; }
+  /* UI 지연 표시용 */
+  .ui-hidden{ visibility:hidden; opacity:0; }
+  .ui-show{ visibility:visible; opacity:1; }
 
   @media (max-width:768px){
     .container{ width:80%; }
@@ -82,14 +85,14 @@
 <body>
 
   <!-- UI -->
-  <div class="container demo-block" id="uiBox" aria-hidden="true">
+  <div class="container demo-block ui-hidden" id="uiBox" aria-hidden="true">
     <div class="input-row">
       <input id="answer" type="text" placeholder="여기에 정답을 입력" />
       <button id="submitBtn" class="btn orange">입력</button>
     </div>
   </div>
 
-  <div class="button-container demo-block" aria-hidden="true">
+  <div class="button-container demo-block ui-hidden" aria-hidden="true">
     <button id="hint1" class="btn orange">힌트 1</button>
     <button id="hint2" class="btn gray">힌트 2</button>
     <button id="answerBtn" class="btn gray">정답 보기</button>
@@ -106,9 +109,17 @@
 
 <script>
 (function(){
-  const INITIAL_DELAY = 5000;  // 페이지 로딩 후 첫 말풍선까지 대기
+  const INITIAL_DELAY = 7000;  // 페이지 로딩 후 첫 말풍선까지 대기
   const DISPLAY_TIME  = 5000;  // 각 말풍선 유지 시간
   const GAP = 6;
+
+  const buttons = document.querySelector(".button-container");
+
+/* 페이지 로드 3초 후 UI 표시 */
+setTimeout(()=>{
+  uiBox.classList.remove("ui-hidden"); uiBox.classList.add("ui-show");
+  buttons.classList.remove("ui-hidden"); buttons.classList.add("ui-show");
+}, 4000);
 
   // 기존 1~6 + 7번째(꼬리없음/아래 배치)
   const steps = [
