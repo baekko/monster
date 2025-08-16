@@ -30,19 +30,19 @@
         }
         .next-button {
             padding: 4px 6px;
-            font-size: 12px;
+            font-size: 20px;
             font-weight: bold;
-            width: 65px;
+            width: 140px;
             cursor: pointer;
-            background-color:rgba(0, 0, 0, 0.5); /* 배경만 반투명 */
-            color: white;
+            background-color:yellow; /* 배경만 반투명 */
+            color: black;
             border: none;
             border-radius: 5px;
             transition: background-color 0.3s;
             opacity: 0;
             visibility: hidden;
             animation: showButton 0s ease-in 8s forwards;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 4px 6px rgba(0, 0, 0);
         }
         .next-button:hover {
             background-color: black;
@@ -58,7 +58,7 @@
         /* 모바일에서 버튼 크기와 위치 조정 */
         @media (max-width: 768px) {
             .next-button {
-                font-size: 12px;
+                font-size: 20px;
                 padding: 4px 6px;
             }
         }
@@ -70,7 +70,7 @@
     </video>
     
     <div class="button-container">
-        <button class="next-button" onclick="goToNextPage()">다음</button>
+        <button class="next-button" onclick="goToNextPage()">네가 리브라?</button>
     </div>
     
     <script>  
@@ -83,4 +83,5 @@
     </script>
 </body>
 </html>
+
 
