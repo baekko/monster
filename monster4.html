@@ -45,10 +45,6 @@
       animation-delay: 3s;
     }
 
-    .next-button:hover {
-      background-color: black;
-    }
-
         @keyframes showButton {
             to {
                 opacity: 1;
@@ -75,18 +71,10 @@
     function goToNextPage() {
       window.location.href = "https://baekko.github.io/monster/monster5.html";
     }
-
-    // 뒤로가기(bfcache 복원 포함) 시에도 버튼 보이도록 처리
-    window.addEventListener("pageshow", () => {
-      document.querySelectorAll(".next-button").forEach(btn=>{
-        btn.style.opacity = "1";
-        btn.style.visibility = "visible";
-        btn.style.animation = "none"; // 애니메이션 재실행 방지
-      });
-    });
   </script>
 </body>
 </html>
+
 
 
 
