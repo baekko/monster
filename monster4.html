@@ -1,42 +1,53 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>몬스터도서관</title>
-    <style>
-        body {
-            background-image: url("monster4.jpg"); 
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed; /* 배경 이미지 고정 */
-            font-family: Arial, sans-serif;
-        }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: fixed; /* 버튼을 화면에 고정 */
-            bottom: 20px; /* 화면 하단에 위치 */
-            width: 100%;
-            transform: translate3d(0, 0, 0);
-        }
-        .next-button {
-            padding: 4px 6px;
-            font-size: 20px;
-            font-weight: bold;
-            width: 140px;
-            cursor: pointer;
-            background-color: yellow; /* 배경만 반투명 */
-            color: black;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0);
-        }
-        .next-button:hover {
-            background-color: black;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>몬스터도서관</title>
+  <style>
+    body {
+      background-image: url("monster4.jpg"); 
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      font-family: Arial, sans-serif;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      transform: translate3d(0,0,0);
+    }
+
+    .next-button {
+      padding: 4px 6px;
+      font-size: 20px;
+      font-weight: bold;
+      width: 140px;
+      cursor: pointer;
+      background-color: yellow;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+      box-shadow: 0px 4px 6px rgba(0,0,0);
+
+      /* 처음에는 안 보이게 */
+      opacity: 0;
+      visibility: hidden;
+
+      /* 3초 후에 나타남 (3초 지연 + 0.5초 페이드인) */
+      animation: showButton 0.5s ease-in forwards;
+      animation-delay: 3s;
+    }
+
+    .next-button:hover {
+      background-color: black;
+    }
 
         @keyframes showButton {
             to {
@@ -56,37 +67,26 @@
 </head>
 <body>
     <div class="button-container">
-        <!-- id 추가 + 최초 숨김 -->
-        <button id="deskButton" class="next-button" style="display:none;" onclick="goToNextPage()">데스크로 갈게!</button>
-    </div>
-    
-    <script>
-    function showButton() {
-      var btn = document.getElementById("deskButton");
-      if (btn) btn.style.display = "inline-block";
-    }
+    <button class="next-button" onclick="goToNextPage()">데스크로 갈게!</button>
+  </div>
 
+  <script>
     function goToNextPage() {
       window.location.href = "https://baekko.github.io/monster/monster5.html";
     }
 
-    // 페이지 로드 후 3초 뒤 버튼 표시 (최초 진입용)
-    window.addEventListener("load", function () {
-      setTimeout(showButton, 3000);
+    // 뒤로가기(bfcache 복원 포함) 시에도 버튼 보이도록 처리
+    window.addEventListener("pageshow", () => {
+      document.querySelectorAll(".next-button").forEach(btn=>{
+        btn.style.opacity = "1";
+        btn.style.visibility = "visible";
+        btn.style.animation = "none"; // 애니메이션 재실행 방지
+      });
     });
-
-    // 뒤로 가기(bfcache 복원 포함) 시 버튼 다시 표시
-    window.addEventListener("pageshow", function (event) {
-      // bfcache에서 복원되었거나 back/forward 내비게이션일 때 즉시 표시
-      var nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
-      var isBackForward = nav && nav.type === "back_forward";
-      if (event.persisted || isBackForward) {
-        showButton();
-      }
-    });
-    </script>
+  </script>
 </body>
 </html>
+
 
 
 
