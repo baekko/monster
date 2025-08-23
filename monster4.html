@@ -55,6 +55,12 @@
                 visibility: visible;
             }
         }
+    /* ★ 추가: 뒤로오기시 강제 표시용 (최우선 적용) */
+    .force-show {
+      opacity: 1 !important;
+      visibility: visible !important;
+      animation: none !important;
+    }
 
         /* 모바일에서 버튼 크기와 위치 조정 */
         @media (max-width: 768px) {
@@ -63,6 +69,7 @@
                 padding: 4px 6px;
             }
         }
+  
     </style>
 </head>
 <body>
@@ -86,6 +93,7 @@
   </script>
 </body>
 </html>
+
 
 
 
