@@ -1,73 +1,77 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>몬스터도서관</title>
-    <style>
-        body {
-            background-image: url("monster11.jpg"); 
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-            font-family: Arial, sans-serif;
-        }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: fixed; /* 버튼을 화면에 고정 */
-            bottom: 20px; /* 화면 하단에 위치 */
-            width: 100%;
-            transform: translate3d(0, 0, 0);
-        }
-        .next-button {
-            padding: 4px 6px;
-            font-size: 20px;
-            font-weight: bold;
-            width: 110px;
-            cursor: pointer;
-            background-color: yellow; /* 배경만 반투명 */
-            color: black;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0);
-        }
-        .next-button:hover {
-            background-color: black;
-        }
-
-        @keyframes showButton {
-            to {
-                opacity: 1;
-                visibility: visible;
-            }
-        }
-
-        /* 모바일에서 버튼 크기와 위치 조정 */
-        @media (max-width: 768px) {
-            .next-button {
-                font-size: 20px;
-                padding: 4px 6px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>몬스터도서관</title>
+  <style>
+    body {
+      background-image: url("monster11.jpg"); 
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      transform: translate3d(0, 0, 0);
+    }
+    .next-button {
+      padding: 6px 12px;   /* 글자수에 비례하도록 여백만 줌 */
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: yellow;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0);
+      display: inline-block; /* 글자수에 따라 버튼 크기 결정 */
+      white-space: nowrap;   /* 줄바꿈 방지 */
+    }
+    .next-button:hover {
+      background-color: black;
+      color: yellow;
+    }
+    @media (max-width: 768px) {
+      .next-button {
+        font-size: 20px;
+        padding: 6px 12px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="button-container">
-        <button class="next-button" onclick="goToNextPage()">다행이야!</button>
-    </div>
-    
-    <script>  
-        function goToNextPage() {
-            window.location.href = "https://baekko.github.io/monster/monster12.html"; 
-        }
-    </script>
+  <div class="button-container">
+    <button id="firstButton" class="next-button">다행이야!</button>
+    <button id="secondButton" class="next-button" style="display:none;">이젠 뭘 도와 주면 될까?</button>
+  </div>
+
+  <script>
+    const firstButton = document.getElementById("firstButton");
+    const secondButton = document.getElementById("secondButton");
+
+    firstButton.addEventListener("click", () => {
+      firstButton.style.display = "none";   // 첫 버튼 숨김
+      secondButton.style.display = "inline-block"; // 두 번째 버튼 표시
+    });
+
+    secondButton.addEventListener("click", () => {
+      window.location.href = "https://baekko.github.io/monster/monster12.html";
+    });
+  </script>
 </body>
+</html>
 
 </html>
+
