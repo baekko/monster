@@ -59,13 +59,30 @@
         <button class="next-button" onclick="goToNextPage()">데스크로 갈게!</button>
     </div>
     
-    <script>  
-        function goToNextPage() {
-            window.location.href = "https://baekko.github.io/monster/monster5.html"; 
-        }
-    </script>
+    <script>
+    function showButton() {
+      document.getElementById("deskButton").style.display = "inline-block";
+    }
+
+    function goToNextPage() {
+      window.location.href = "https://baekko.github.io/monster/monster5.html";
+    }
+
+    // 페이지 로드 후 3초 뒤 버튼 표시
+    window.addEventListener("load", () => {
+      setTimeout(showButton, 3000);
+    });
+
+    // 뒤로 가기 시 캐시에서 불러와도 버튼 보이게
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted) {
+        setTimeout(showButton, 0); // 즉시 다시 표시
+      }
+    });
+  </script>
 </body>
 </html>
+
 
 
 
