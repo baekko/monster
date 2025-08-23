@@ -56,32 +56,38 @@
 </head>
 <body>
     <div class="button-container">
-        <button class="next-button" onclick="goToNextPage()">데스크로 갈게!</button>
+        <!-- id 추가 + 최초 숨김 -->
+        <button id="deskButton" class="next-button" style="display:none;" onclick="goToNextPage()">데스크로 갈게!</button>
     </div>
     
     <script>
     function showButton() {
-      document.getElementById("deskButton").style.display = "inline-block";
+      var btn = document.getElementById("deskButton");
+      if (btn) btn.style.display = "inline-block";
     }
 
     function goToNextPage() {
       window.location.href = "https://baekko.github.io/monster/monster5.html";
     }
 
-    // 페이지 로드 후 3초 뒤 버튼 표시
-    window.addEventListener("load", () => {
+    // 페이지 로드 후 3초 뒤 버튼 표시 (최초 진입용)
+    window.addEventListener("load", function () {
       setTimeout(showButton, 3000);
     });
 
-    // 뒤로 가기 시 캐시에서 불러와도 버튼 보이게
-    window.addEventListener("pageshow", (event) => {
-      if (event.persisted) {
-        setTimeout(showButton, 0); // 즉시 다시 표시
+    // 뒤로 가기(bfcache 복원 포함) 시 버튼 다시 표시
+    window.addEventListener("pageshow", function (event) {
+      // bfcache에서 복원되었거나 back/forward 내비게이션일 때 즉시 표시
+      var nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+      var isBackForward = nav && nav.type === "back_forward";
+      if (event.persisted || isBackForward) {
+        showButton();
       }
     });
-  </script>
+    </script>
 </body>
 </html>
+
 
 
 
