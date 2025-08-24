@@ -5,21 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>몬스터도서관</title>
     <style>
-         html, body {
-            height: 100%;
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
-        }
         body {
             background-image: url("monster25.jpg"); 
             background-size: cover;
             background-position: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
+            background-attachment: fixed; /* 배경 이미지 고정 */
             font-family: Arial, sans-serif;
         }
         .button-container {
@@ -42,13 +32,19 @@
             border-radius: 5px;
             transition: background-color 0.3s;
             box-shadow: 0px 4px 6px rgba(0, 0, 0);
+            opacity: 0;
+            visibility: hidden;   
+            animation: showButton 0.5s ease-in forwards;
+            animation-delay: 2s;
         }
+       
         @keyframes showButton {
             to {
                 opacity: 1;
                 visibility: visible;
             }
         }
+
         /* 모바일에서 버튼 크기와 위치 조정 */
         @media (max-width: 768px) {
             .next-button {
@@ -60,7 +56,7 @@
 </head>
 <body>
     <div class="button-container">
-        <button class="next-button" onclick="goToNextPage()">좋아!</button>
+        <button class="next-button" onclick="goToNextPage()">그래, 좋아!</button>
     </div>
     
     <script>  
@@ -69,7 +65,7 @@
         }
     </script>
 </body>
-
 </html>
+
 
 
