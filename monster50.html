@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>몬스터도서관</title>
+  <style>
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    body{
+      background-image:url("monster50.jpg");
+      background-size:cover;
+      background-position:center;
+      display:flex;justify-content:center;align-items:center;
+      height:100vh;flex-direction:column;font-family:Arial,sans-serif;
+    }
+    .button-container{
+      display:flex;justify-content:center;align-items:center;
+      position:fixed;bottom:20px;width:100%;
+      transform:translate3d(0,0,0);z-index:1000;
+    }
+    .next-button{
+      padding:4px 6px;font-size:20px;font-weight:bold;cursor:pointer;
+      background-color:yellow;color:black;border:none;border-radius:5px;
+      transition:background-color .3s;box-shadow:0 4px 6px rgba(0,0,0);
+      opacity: 0;
+      pointer-events: none;  
+      animation: showButton 0.5s ease-in forwards;
+      animation-delay: 2s;
+    }
+    
+    /* 봉인 버튼: 오른쪽 하단 고정 */
+    .seal-button{
+      position:fixed;right:50px;bottom:20px;z-index:1001;
+      width:50px;height:50px; /* 다음 버튼 높이 2배 정도 */
+      background:url("monsterbook5.png") center/cover no-repeat;
+      background-color:gray;
+      border:none;border-radius:6px;cursor:pointer;
+      box-shadow:0 4px 6px rgba(0,0,0);
+    }
+
+    /* 모달: 배경 어둡게 하지 않음(투명) */
+    .overlay{
+      position:fixed;inset:0;background:transparent; /* ← 배경 어둡지 않게 */
+      display:flex;align-items:center;justify-content:center;z-index:2000;
+    }
+    .overlay img{
+      max-width:70vw;max-height:85vh;object-fit:contain;display:block;
+      border-radius:10px;background:transparent;
+      box-shadow:0 4px 6px rgba(0, 0, 0);
+    }
+    @keyframes showButton {
+            to {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+    @media (max-width:768px){
+      .seal-button{ width:50px;height:50px;right:50px;bottom:18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="button-container">
+    <button class="next-button" onclick="goToNextPage()">뭘 찾는걸까?</button>
+  </div>
+
+  <!-- 봉인 버튼 -->
+  <button class="seal-button" id="sealBtn" aria-label="봉인"></button>
+
+  <script>
+    function goToNextPage(){
+      window.location.href = "https://baekko.github.io/monster/monster51.html";
+    }
+
+    // 봉인 버튼: 토글(열기/닫기)
+    const sealBtn = document.getElementById('sealBtn');
+    sealBtn.addEventListener('click', toggleSeal);
+
+    function toggleSeal(){
+      const opened = document.querySelector('.overlay');
+      if(opened){
+        opened.remove(); // 이미 떠있으면 닫기
+        return;
+      }
+      // 없으면 열기
+      const overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      overlay.innerHTML = `<img src="monsterindex5.png" alt="Monster Index">`;
+      // 모달 아무 곳이나 터치하면 닫기
+      overlay.addEventListener('click', () => overlay.remove());
+      document.body.appendChild(overlay);
+    }
+  </script>
+</body>
+
+</html>
