@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>키패드</title>
+  <style>
+    html, body { height:100vh; margin:0; padding:0; overflow:hidden; }
+    body {
+      background-image:url("monster69.jpg");
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      position: absolute;
+      bottom: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(4, 40px);
+      gap: 6px;
+      background: #666;
+      padding: 8px;
+      border-radius: 10px;
+      box-sizing: content-box;
+    }
+    .key {
+      width: 40px; height: 40px;
+      background: #aaa;
+      border: 2px solid #555;
+      border-radius: 8px;
+      box-shadow: inset 0 0 5px #000;
+      transition: 0.2s;
+    }
+    .key.active { background:#ffe066; box-shadow:0 0 10px #ffd700; }
+    #submit {
+      margin-top: 16px;
+      padding: 4px 6px;
+      width: 65px;
+      background: orange;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 0 5px #222;
+      cursor: pointer;
+    }
+    .button-container {
+      position: fixed;
+      bottom: 15px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 10px;
+    }
+    button {
+      padding: 4px 6px; width:65px;
+      font-size: 12px; font-weight: bold;
+      cursor: pointer; color:white;
+      background-color: orange;
+      border:none; border-radius:5px;
+      box-shadow:0px 4px 6px rgba(0,0,0,0.466);
+    }
+    button:disabled {
+      background-color: rgb(109,93,93)!important;
+      cursor:not-allowed; opacity:0.8;
+    }
+    .modal {
+      display:none;
+      position:fixed; z-index:1000;
+      left:50%; top:50%;
+      transform:translate(-50%,-50%);
+      width:250px; padding:15px;
+      background-color:white;
+      border-radius:10px;
+      box-shadow:0 4px 8px rgba(0,0,0,0.2);
+      text-align:center;
+    }
+    .modal-content img {
+      max-width: 150px;   /* 원하는 크기로 조정 */
+      height: auto;
+      display: block;
+      margin: 0 auto;     /* 가운데 정렬 */
+    }
+    .close { float:right; cursor:pointer; font-size:20px; font-weight:bold; }
+  </style>
+</head>
+<body>
+  <div class="button-container">
+    <button id="hint1" onclick="useHint1()">힌트 1</button>
+    <button id="hint2" onclick="useHint2()" disabled>힌트 2</button>
+    <button id="answerBtn" onclick="showAnswerModal()" disabled>정답 보기</button>
+    <button onclick="showScore()">점수 보기</button>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <p id="modalText"></p>
+      <img id="modalImage" style="display:none;" />
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="keypad" id="keypad">
+      <div class="key" data-index="0"></div>
+      <div class="key" data-index="1"></div>
+      <div class="key" data-index="2"></div>
+      <div class="key" data-index="3"></div>
+      <div class="key" data-index="4"></div>
+      <div class="key" data-index="5"></div>
+      <div class="key" data-index="6"></div>
+      <div class="key" data-index="7"></div>
+      <div class="key" data-index="8"></div>
+      <div class="key" data-index="9"></div>
+      <div class="key" data-index="10"></div>
+      <div class="key" data-index="11"></div>
+    </div>
+    <button id="submit">입력</button>
+  </div>
+
+  <script>
+    const keys = document.querySelectorAll('.key');
+    const submit = document.getElementById('submit');
+    const modal = document.getElementById('modal');
+    const modalText = document.getElementById('modalText');
+    const modalImage = document.getElementById('modalImage');
+
+    const correctIndexes = [0, 2, 5, 9, 11];
+    const nextPageUrl = "https://baekko.github.io/monster/monster70.html";
+
+    let score = localStorage.getItem("score") ? parseInt(localStorage.getItem("score")) : 100;
+    let hint1Used=false, hint2Used=false, answerUsed=false;
+
+    function updateScore(points){ score+=points; localStorage.setItem("score",score); }
+    function useHint1(){
+      modalText.style.display="block"; modalImage.style.display="none";
+      modalText.innerText="룰베인힌트1"; modal.style.display="block";
+      document.getElementById('hint2').disabled=false;
+      if(!hint1Used){ updateScore(-1); hint1Used=true; }
+    }
+    function useHint2(){
+      modalText.style.display="block"; modalImage.style.display="none";
+      modalText.innerText="룰베인힌트2"; modal.style.display="block";
+      document.getElementById('answerBtn').disabled=false;
+      if(!hint2Used){ updateScore(-1); hint2Used=true; }
+    }
+    function showAnswerModal(){
+      modalText.style.display="none"; modalImage.style.display="block";
+      modalImage.src="correctkeypad.png"; modal.style.display="block";
+      if(!answerUsed){ updateScore(-1); answerUsed=true; }
+    }
+    function showScore(){
+      modalText.style.display="block"; modalImage.style.display="none";
+      modalText.innerText="현재 점수: "+score+"점"; modal.style.display="block";
+    }
+    function closeModal(){ modal.style.display="none"; }
+
+    keys.forEach(key=>{
+      key.addEventListener('click',()=>{ key.classList.toggle('active'); });
+    });
+
+    submit.addEventListener('click',()=>{
+      const selected = Array.from(keys)
+        .map((key,index)=>key.classList.contains('active')?index:null)
+        .filter(i=>i!==null);
+
+      const isCorrect = correctIndexes.every(i=>selected.includes(i)) &&
+                        selected.length===correctIndexes.length;
+
+      if(isCorrect){
+        window.location.href=nextPageUrl;
+      }else{
+        modalText.style.display="block"; modalImage.style.display="none";
+        modalText.innerText="오답"; modal.style.display="block";
+      }
+    });
+  </script>
+</body>
+</html>
