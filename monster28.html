@@ -28,7 +28,7 @@
       background-color:yellow;color:black;border:none;border-radius:5px;
       transition:background-color .3s;box-shadow:0 4px 6px rgba(0,0,0);
       opacity: 0;
-      visibility: hidden;   
+      pointer-events: none;  
       animation: showButton 0.5s ease-in forwards;
       animation-delay: 2s;
     }
@@ -56,7 +56,7 @@
     @keyframes showButton {
             to {
                 opacity: 1;
-                visibility: visible;
+                pointer-events: auto;
             }
         }
     @media (max-width:768px){
@@ -85,7 +85,7 @@
       const opened = document.querySelector('.overlay');
       if(opened){
         opened.remove(); // 이미 떠있으면 닫기
-        return;PageRevealEvent
+        return;
       }
       // 없으면 열기
       const overlay = document.createElement('div');
@@ -99,6 +99,7 @@
 </body>
 
 </html>
+
 
 
 
