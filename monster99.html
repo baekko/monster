@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>책 선택 페이지</title>
+  <style>
+    html, body {
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    body {
+      background-image: url("monster99.jpg");
+      background-size: cover;
+      background-position: center;
+      font-family: Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent; /* 터치 반짝임 제거 */
+    }
+
+    /* 가운데 스테이지: 상단 고정/하단 고정 UI를 피해 중앙 정렬 */
+    .stage {
+      position: fixed;
+      left: 0; right: 0;
+      top: 200px;          /* 필요시 미세조정 */
+      bottom: 80px;      /* 하단 고정 입력/버튼 영역 확보 */
+      display: flex;
+      align-items: center;     /* 수직 중앙 */
+      justify-content: center; /* 수평 중앙 */
+      z-index: 1;
+      pointer-events: none;    /* 내부 클릭 요소만 이벤트 받도록 래퍼는 막음 */
+    }
+
+    /* 책 5개 + 각 책 아래 박스 5개(한 쌍) */
+    .book-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 10px; /* 박스 폭(30px)과 동일 간격 */
+      pointer-events: auto;
+    }
+    .book-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+    }
+    .book {
+      width: 50px;
+      height: auto;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transform: none;
+      filter: none;
+    }
+    .book:active { transform: none; filter: none; }
+
+    /* 이미지박스: 고정 크기, 여백/그림자 없음, 이미지 바뀌어도 크기 고정 */
+    .box {
+      width: 30px;  /* 고정 폭 */
+      height: 127px;/* 고정 높이 */
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      touch-action: manipulation;
+    }
+    .box:active { transform: none; filter: none; opacity: 1; }
+    .box img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;     /* 이미지 비율 달라도 박스 크기 유지 */
+      -webkit-user-drag: none;
+      user-select: none;
+      pointer-events: none;  /* 클릭은 부모 .box에서 처리 */
+    }
+
+    /* 책 확대 모달 */
+    .bookmodal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+    }
+    .bookmodal-content {
+      position: relative;
+      max-width: 86%;
+      max-height: 86%;
+    }
+    .bookmodal-content img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+    }
+    .book-close {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: #fff;
+      color: #000;
+      border: none;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 34px;
+      text-align: center;
+    }
+
+    /* 하단 고정: 입력창(원래 값 유지) */
+    .container {
+      background-color: rgba(0, 0, 0, 0.4);
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      position: fixed;
+      bottom: 50px;                 /* 원래: 50px */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;                   /* 원래: 60% */
+      max-width: 375px;             /* 원래: 375px */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1500;
+    }
+    .input-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      justify-content: center;
+    }
+    input {
+      padding: 8px;
+      font-size: 14px;
+      width: 60%;                   /* 원래: 60% */
+      border: none;
+      border-radius: 5px;
+      margin-right: 10px;           /* 원래 여백 */
+      caret-color: orange;
+    }
+    button {
+      padding: 4px 6px;             /* 원래 패딩 */
+      width: 65px;                  /* 원래 너비 */
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+      background-color: orange;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.466);
+    }
+
+    /* 하단 고정: 버튼들(원래 값 유지) */
+    .button-container {
+      position: fixed;
+      bottom: 15px;                 /* 원래: 15px */
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;                    /* 원래 간격 */
+      z-index: 1500;
+    }
+    button:disabled {
+      background-color: rgb(109, 93, 93) !important;
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+
+    /* 점수/힌트 모달 */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1600;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      padding: 15px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .modal-content { text-align: center; position: relative; }
+    .modal .close-x {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    @media (max-width: 768px) {
+      .container { width: 80%; padding: 10px; }
+      input { font-size: 12px; width: 60%; }
+      button { font-size: 12px; padding: 4px 6px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 가운데: 책 5개 + 각 책 아래 박스 5개 -->
+  <div class="stage">
+    <div class="book-row">
+      <div class="book-box">
+        <img class="book" src="book300.png" alt="book" onclick="openBookModal(this.src)" />
+        <div class="box" onclick="cycleImage(this)"><img src="classify0.png" alt="box"></div>
+      </div>
+      <div class="book-box">
+        <img class="book" src="book500.png" alt="book" onclick="openBookModal(this.src)" />
+        <div class="box" onclick="cycleImage(this)"><img src="classify0.png" alt="box"></div>
+      </div>
+      <div class="book-box">
+        <img class="book" src="book100.png" alt="book" onclick="openBookModal(this.src)" />
+        <div class="box" onclick="cycleImage(this)"><img src="classify0.png" alt="box"></div>
+      </div>
+      <div class="book-box">
+        <img class="book" src="book800.png" alt="book" onclick="openBookModal(this.src)" />
+        <div class="box" onclick="cycleImage(this)"><img src="classify0.png" alt="box"></div>
+      </div>
+      <div class="book-box">
+        <img class="book" src="book400.png" alt="book" onclick="openBookModal(this.src)" />
+        <div class="box" onclick="cycleImage(this)"><img src="classify0.png" alt="box"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 책 확대 모달 -->
+  <div id="bookmodal" class="bookmodal" onclick="closeBookModal()">
+    <div class="bookmodal-content" onclick="event.stopPropagation()">
+      <button class="book-close" onclick="closeBookModal()">&times;</button>
+      <img id="modal-img" src="" alt="확대 이미지" />
+    </div>
+  </div>
+
+  <!-- 하단 고정: 입력 -->
+  <div class="container">
+    <div class="input-container">
+      <input type="text" id="answer" placeholder="정답 입력" />
+      <button onclick="checkAnswer()">입력</button>
+    </div>
+  </div>
+
+  <!-- 하단 고정: 점수/힌트/정답 보기 -->
+  <div class="button-container">
+    <button id="hint1" onclick="useHint1()">힌트 1</button>
+    <button id="hint2" onclick="useHint2()" disabled>힌트 2</button>
+    <button id="answerBtn" onclick="showAnswerModal()" disabled>정답 보기</button>
+    <button onclick="showScore()">점수 보기</button>
+  </div>
+
+  <!-- 점수/힌트 모달 -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close-x" onclick="closeScoreModal()">&times;</span>
+      <p id="modalText"></p>
+    </div>
+  </div>
+
+  <script>
+    /* 이미지 박스: 10장 순환(크기는 박스 고정) */
+    const classifyImages = [
+      "classify0.png","classify1.png","classify2.png","classify3.png","classify4.png",
+      "classify5.png","classify6.png","classify7.png","classify8.png","classify9.png"
+    ];
+    function cycleImage(boxEl) {
+      const img = boxEl.querySelector("img");
+      const current = parseInt(boxEl.dataset.index || "0", 10);
+      const next = (current + 1) % classifyImages.length;
+      img.src = classifyImages[next];
+      boxEl.dataset.index = String(next);
+    }
+
+    /* 책 모달 */
+    function openBookModal(src) {
+      const modal = document.getElementById("bookmodal");
+      const modalImg = document.getElementById("modal-img");
+      modalImg.src = src;
+      modal.style.display = "flex";
+    }
+    function closeBookModal() {
+      const modal = document.getElementById("bookmodal");
+      modal.style.display = "none";
+      document.getElementById("modal-img").src = "";
+    }
+
+    let score = localStorage.getItem("score") ? parseInt(localStorage.getItem("score")) : 100;
+    let hint1Used = false, hint2Used = false, answerUsed = false;
+
+    function updateScore(points) {
+      score += points;
+      localStorage.setItem("score", score);
+    }
+    function useHint1() {
+      document.getElementById('modalText').innerText = "데시메스힌트1";
+      document.getElementById('modal').style.display = "block";
+      document.getElementById('hint2').disabled = false;
+      if (!hint1Used) { updateScore(-1); hint1Used = true; }
+    }
+    function useHint2() {
+      document.getElementById('modalText').innerText = "데시메스힌트2";
+      document.getElementById('modal').style.display = "block";
+      document.getElementById('answerBtn').disabled = false;
+      if (!hint2Used) { updateScore(-1); hint2Used = true; }
+    }
+    function showAnswerModal() {
+      document.getElementById('modalText').innerText = "index";
+      document.getElementById('modal').style.display = "block";
+      if (!answerUsed) { updateScore(-1); answerUsed = true; }
+    }
+    function showScore() {
+      document.getElementById('modalText').innerText = "현재 점수: " + score + "점";
+      document.getElementById('modal').style.display = "block";
+    }
+    function closeScoreModal() {
+      document.getElementById('modal').style.display = "none";
+    }
+
+    /* 정답 체크 */
+    function checkAnswer() {
+      const value = document.getElementById('answer').value.trim();
+      const correctAnswer = "index";
+      if (value === correctAnswer) {
+        window.location.href = "https://baekko.github.io/monster/monster100.html";
+      } else {
+        document.getElementById('modalText').innerText = "오답";
+        document.getElementById('modal').style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>
