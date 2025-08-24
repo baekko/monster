@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정답 입력</title>
+    <style>
+        body {
+            background-image: url("monster89.jpg"); 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.4); /* 배경만 반투명 */
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            max-width: 375px;
+            flex-direction: column;
+            align-items: center;
+        }
+        .button-container {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+     
+        .input-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: center;
+        }
+        input {
+            padding: 8px;
+            font-size: 14px;
+            width: 60%;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+            caret-color: orange; /* 커서를 주황색으로 변경 */
+
+        }
+        button {
+            padding: 4px 6px;
+            width: 65px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            background-color: orange;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.466);
+        }
+        button:disabled {
+            background-color: rgb(109, 93, 93) !important;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+    
+        .modal-content {
+            text-align: center;
+        }
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .container {
+                width: 80%;
+                padding: 10px;
+            }
+            input {
+                font-size: 12px;
+                width: 60%;
+            }
+            button {
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="text" id="answer">
+        <button onclick="checkAnswer()">입력</button>
+    </div>   
+    <div class="button-container">
+        <button id="hint1" onclick="useHint1()">힌트 1</button>
+        <button id="hint2" onclick="useHint2()" disabled>힌트 2</button>
+        <button id="answerBtn" onclick="showAnswerModal()" disabled>정답 보기</button>
+        <button onclick="showScore()">점수 보기</button>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="modalText"></p>
+        </div>
+    </div>
+    
+    <script>
+        let score = localStorage.getItem("score") ? parseInt(localStorage.getItem("score")) : 100;
+        let hint1Used = false;
+        let hint2Used = false;
+        let answerUsed = false;
+
+        function updateScore(points) {
+            score += points;
+            localStorage.setItem("score", score);
+        }
+        function useHint1() {
+            document.getElementById('modalText').innerText = "글룸셸프힌트1";
+            document.getElementById('modal').style.display = "block";
+            document.getElementById('hint2').disabled = false;
+            if (!hint1Used) {
+                updateScore(-1);
+                hint1Used = true;
+            }
+        }
+        function useHint2() {
+            document.getElementById('modalText').innerText = "글룸셸프힌트2";
+            document.getElementById('modal').style.display = "block";
+            document.getElementById('answerBtn').disabled = false;
+            if (!hint2Used) {
+                updateScore(-1);
+                hint2Used = true;
+            }
+        }
+        function showAnswerModal() {
+            document.getElementById('modalText').innerText = "label";
+            document.getElementById('modal').style.display = "block";
+            if (!answerUsed) {
+                updateScore(-1);
+                answerUsed = true;
+            }
+        }
+        function showScore() {
+            document.getElementById('modalText').innerText = "현재 점수: " + score + "점";
+            document.getElementById('modal').style.display = "block";
+        }
+        function closeModal() {
+            document.getElementById('modal').style.display = "none";
+        }
+        function checkAnswer() {
+            var answer = document.getElementById('answer').value;
+            var correctAnswer = "label";
+            if (answer === correctAnswer) {
+                window.location.href = "https://baekko.github.io/monster/monster90.html";
+            } else {
+                document.getElementById('modalText').innerText = "오답";
+                document.getElementById('modal').style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
