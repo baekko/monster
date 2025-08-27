@@ -109,8 +109,8 @@
             document.getElementById('modal').style.display = "none";
         }
         function checkAnswer() {
-            var answer = document.getElementById('answer').value;
-            var correctAnswer = "open";
+            var answer = document.getElementById('answer').value.trim().toLowerCase();
+            var correctAnswer = "open".toLowerCase();
             if (answer === correctAnswer) {
                 window.location.href = "https://baekko.github.io/monster/monster9.html";
             } else {
@@ -121,4 +121,5 @@
     </script>
 </body>
 </html>
+
 
