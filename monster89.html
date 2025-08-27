@@ -180,8 +180,8 @@
             document.getElementById('modal').style.display = "none";
         }
         function checkAnswer() {
-            var answer = document.getElementById('answer').value;
-            var correctAnswer = "label";
+            var answer = document.getElementById('answer').value.trim().toLowerCase();
+            var correctAnswer = "label".toLowerCase();
             if (answer === correctAnswer) {
                 window.location.href = "https://baekko.github.io/monster/monster210.html";
             } else {
@@ -192,4 +192,5 @@
     </script>
 </body>
 </html>
+
 
