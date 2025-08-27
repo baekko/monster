@@ -180,7 +180,7 @@
             document.getElementById('modal').style.display = "none";
         }
         function checkAnswer() {
-            var answer = document.getElementById('answer').value;
+            var answer = document.getElementById('answer').value.trim();
             var correctAnswer = "42";
             if (answer === correctAnswer) {
                 window.location.href = "https://baekko.github.io/monster/monster17.html";
@@ -193,5 +193,6 @@
 </body>
 
 </html>
+
 
 
