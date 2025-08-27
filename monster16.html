@@ -165,7 +165,7 @@
             }
         }
         function showAnswerModal() {
-            document.getElementById('modalText').innerText = "72";
+            document.getElementById('modalText').innerText = "42";
             document.getElementById('modal').style.display = "block";
             if (!answerUsed) {
                 updateScore(-1);
@@ -181,7 +181,7 @@
         }
         function checkAnswer() {
             var answer = document.getElementById('answer').value;
-            var correctAnswer = "72";
+            var correctAnswer = "42";
             if (answer === correctAnswer) {
                 window.location.href = "https://baekko.github.io/monster/monster17.html";
             } else {
@@ -193,4 +193,5 @@
 </body>
 
 </html>
+
 
