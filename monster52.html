@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>정답 입력</title>
     <style>
+        html, body {
+           height: 100%;
+           overflow: hidden;
+           margin: 0;
+           padding: 0;
+       }
         body {
             background-image: url("monster52.jpg"); 
             background-size: cover;
@@ -174,8 +180,8 @@
             document.getElementById('modal').style.display = "none";
         }
         function checkAnswer() {
-            var answer = document.getElementById('answer').value;
-            var correctAnswer = "home";
+            var answer = document.getElementById('answer').value.toLowerCase();
+            var correctAnswer = "home".toLowerCase();
             if (answer === correctAnswer) {
                 window.location.href = "https://baekko.github.io/monster/monster206.html";
             } else {
@@ -187,3 +193,4 @@
 </body>
 
 </html>
+
