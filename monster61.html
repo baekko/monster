@@ -180,7 +180,7 @@
             document.getElementById('modal').style.display = "none";
         }
         function checkAnswer() {
-            var answer = document.getElementById('answer').value.toLowerCase();
+            var answer = document.getElementById('answer').value.trim().toLowerCase();
             var correctAnswer = "present".toLowerCase();
             if (answer === correctAnswer) {
                 window.location.href = "https://baekko.github.io/monster/monster207.html";
@@ -193,4 +193,5 @@
 </body>
 
 </html>
+
 
