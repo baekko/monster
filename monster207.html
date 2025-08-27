@@ -44,10 +44,7 @@
             animation: showButton 0s ease-in 8s forwards;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
         }
-        .next-button:hover {
-            background-color: black;
-        }
-
+        
         @keyframes showButton {
             to {
                 opacity: 1;
@@ -66,16 +63,16 @@
 </head>
 <body>
     <video class="video-background" autoplay muted playsinline id="bg-video">
-        <source src="monster202.mp4" type="video/mp4">  <!-- 망고보드 동영상 URL 넣기 -->
+        <source src="monster207.mp4" type="video/mp4">  <!-- 망고보드 동영상 URL 넣기 -->
     </video>
     
     <div class="button-container">
-        <button class="next-button" onclick="goToNextPage()">슬로모로 봉인!</button>
+        <button class="next-button" onclick="goToNextPage()">스플리드 봉인!</button>
     </div>
     
     <script>  
         function goToNextPage() {
-            window.location.href = "https://baekko.github.io/monster/monster28.html"; // 이동할 페이지 설정
+            window.location.href = "https://baekko.github.io/monster/monster64.html"; // 이동할 페이지 설정
         }
         document.getElementById('bg-video').onended = function() {
             this.pause(); // 동영상 재생이 끝나면 정지
