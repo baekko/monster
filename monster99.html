@@ -216,26 +216,35 @@
   <div class="stage">
     <div class="book-row">
       <div class="book-box">
-        <img class="book" src="book300.png" alt="book" onclick="openBookModal(this.src)" />
-        <div class="box" onclick="cycleImage(this)"><img src="classify1.png" alt="box"></div>
-      </div>
-      <div class="book-box">
-        <img class="book" src="book500.png" alt="book" onclick="openBookModal(this.src)" />
-        <div class="box" onclick="cycleImage(this)"><img src="classify3.png" alt="box"></div>
-      </div>
-      <div class="book-box">
-        <img class="book" src="book100.png" alt="book" onclick="openBookModal(this.src)" />
-        <div class="box" onclick="cycleImage(this)"><img src="classify6.png" alt="box"></div>
-      </div>
-      <div class="book-box">
-        <img class="book" src="book800.png" alt="book" onclick="openBookModal(this.src)" />
-        <div class="box" onclick="cycleImage(this)"><img src="classify7.png" alt="box"></div>
-      </div>
-      <div class="book-box">
-        <img class="book" src="book400.png" alt="book" onclick="openBookModal(this.src)" />
-        <div class="box" onclick="cycleImage(this)"><img src="classify8.png" alt="box"></div>
-      </div>
-    </div>
+  <img class="book" src="book300.png" alt="book" onclick="openBookModal(this.src)" />
+  <div class="box" data-index="1" onclick="cycleImage(this)">
+    <img src="classify1.png" alt="box">
+  </div>
+</div>
+<div class="book-box">
+  <img class="book" src="book500.png" alt="book" onclick="openBookModal(this.src)" />
+  <div class="box" data-index="3" onclick="cycleImage(this)">
+    <img src="classify3.png" alt="box">
+  </div>
+</div>
+<div class="book-box">
+  <img class="book" src="book100.png" alt="book" onclick="openBookModal(this.src)" />
+  <div class="box" data-index="6" onclick="cycleImage(this)">
+    <img src="classify6.png" alt="box">
+  </div>
+</div>
+<div class="book-box">
+  <img class="book" src="book800.png" alt="book" onclick="openBookModal(this.src)" />
+  <div class="box" data-index="7" onclick="cycleImage(this)">
+    <img src="classify7.png" alt="box">
+  </div>
+</div>
+<div class="book-box">
+  <img class="book" src="book400.png" alt="book" onclick="openBookModal(this.src)" />
+  <div class="box" data-index="8" onclick="cycleImage(this)">
+    <img src="classify5.png" alt="box">
+  </div>
+</div>
   </div>
 
   <!-- 책 확대 모달 -->
@@ -343,6 +352,7 @@
   </script>
 </body>
 </html>
+
 
 
 
