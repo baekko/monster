@@ -23,12 +23,12 @@
     .stage {
       position: fixed;
       left: 0; right: 0;
-      top: 200px;          /* 필요시 미세조정 */
+      top: 200px;        /* 필요시 미세조정 */
       bottom: 80px;      /* 하단 고정 입력/버튼 영역 확보 */
       display: flex;
       align-items: center;     /* 수직 중앙 */
       justify-content: center; /* 수평 중앙 */
-      z-index: 1;
+      z-index: 0;              /* 겹침 방지: 가장 아래 */
       pointer-events: none;    /* 내부 클릭 요소만 이벤트 받도록 래퍼는 막음 */
     }
 
@@ -38,7 +38,7 @@
       align-items: flex-start;
       justify-content: center;
       gap: 10px; /* 박스 폭(30px)과 동일 간격 */
-      pointer-events: auto;
+      pointer-events: auto; /* 내부 요소 클릭 가능 */
     }
     .book-box {
       display: flex;
@@ -58,8 +58,8 @@
 
     /* 이미지박스: 고정 크기, 여백/그림자 없음, 이미지 바뀌어도 크기 고정 */
     .box {
-      width: 30px;  /* 고정 폭 */
-      height: 127px;/* 고정 높이 */
+      width: 30px;   /* 고정 폭 */
+      height: 127px; /* 고정 높이 */
       cursor: pointer;
       padding: 0;
       margin: 0;
@@ -84,11 +84,12 @@
     .bookmodal {
       display: none;
       position: fixed;
-      z-index: 2000;
+      z-index: 4000; /* 최상위 */
       inset: 0;
       background: rgba(0, 0, 0, 0.8);
       justify-content: center;
       align-items: center;
+      pointer-events: auto;
     }
     .bookmodal-content {
       position: relative;
@@ -132,7 +133,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      z-index: 1500;
+      z-index: 3000;                /* 더 높게 */
+      pointer-events: auto;         /* 항상 클릭 가능 */
     }
     .input-container {
       display: flex;
@@ -170,7 +172,8 @@
       transform: translateX(-50%);
       display: flex;
       gap: 10px;                    /* 원래 간격 */
-      z-index: 1500;
+      z-index: 3000;                /* 더 높게 */
+      pointer-events: auto;         /* 항상 클릭 가능 */
     }
     button:disabled {
       background-color: rgb(109, 93, 93) !important;
@@ -182,7 +185,7 @@
     .modal {
       display: none;
       position: fixed;
-      z-index: 1600;
+      z-index: 3600;  /* 컨테이너/버튼보다 높게 */
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
@@ -191,6 +194,7 @@
       background-color: white;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      pointer-events: auto;
     }
     .modal-content { text-align: center; position: relative; }
     .modal .close-x {
@@ -216,35 +220,31 @@
   <div class="stage">
     <div class="book-row">
       <div class="book-box">
-  <img class="book" src="book300.png" alt="book" onclick="openBookModal(this.src)" />
-  <div class="box" data-index="1" onclick="cycleImage(this)">
-    <img src="classify1.png" alt="box">
-  </div>
-</div>
-<div class="book-box">
-  <img class="book" src="book500.png" alt="book" onclick="openBookModal(this.src)" />
-  <div class="box" data-index="3" onclick="cycleImage(this)">
-    <img src="classify3.png" alt="box">
-  </div>
-</div>
-<div class="book-box">
-  <img class="book" src="book100.png" alt="book" onclick="openBookModal(this.src)" />
-  <div class="box" data-index="6" onclick="cycleImage(this)">
-    <img src="classify6.png" alt="box">
-  </div>
-</div>
-<div class="book-box">
-  <img class="book" src="book800.png" alt="book" onclick="openBookModal(this.src)" />
-  <div class="box" data-index="7" onclick="cycleImage(this)">
-    <img src="classify7.png" alt="box">
-  </div>
-</div>
-<div class="book-box">
-  <img class="book" src="book400.png" alt="book" onclick="openBookModal(this.src)" />
-  <div class="box" data-index="8" onclick="cycleImage(this)">
-    <img src="classify5.png" alt="box">
-  </div>
-</div>
+        <img class="book" src="book300.png" alt="book" onclick="openBookModal(this.src)" />
+        <!-- 시작: classify1 -->
+        <div class="box" data-index="1" onclick="cycleImage(this)"><img src="classify1.png" alt="box"></div>
+      </div>
+      <div class="book-box">
+        <img class="book" src="book500.png" alt="book" onclick="openBookModal(this.src)" />
+        <!-- 시작: classify3 -->
+        <div class="box" data-index="3" onclick="cycleImage(this)"><img src="classify3.png" alt="box"></div>
+      </div>
+      <div class="book-box">
+        <img class="book" src="book100.png" alt="book" onclick="openBookModal(this.src)" />
+        <!-- 시작: classify6 -->
+        <div class="box" data-index="6" onclick="cycleImage(this)"><img src="classify6.png" alt="box"></div>
+      </div>
+      <div class="book-box">
+        <img class="book" src="book800.png" alt="book" onclick="openBookModal(this.src)" />
+        <!-- 시작: classify7 -->
+        <div class="box" data-index="7" onclick="cycleImage(this)"><img src="classify7.png" alt="box"></div>
+      </div>
+      <div class="book-box">
+        <img class="book" src="book400.png" alt="book" onclick="openBookModal(this.src)" />
+        <!-- 시작: classify8 -->
+        <div class="box" data-index="5" onclick="cycleImage(this)"><img src="classify5.png" alt="box"></div>
+      </div>
+    </div>
   </div>
 
   <!-- 책 확대 모달 -->
@@ -258,7 +258,7 @@
   <!-- 하단 고정: 입력 -->
   <div class="container">
     <div class="input-container">
-      <input type="text" id="answer">
+      <input type="text" id="answer" autocomplete="off" />
       <button onclick="checkAnswer()">입력</button>
     </div>
   </div>
@@ -306,6 +306,7 @@
       document.getElementById("modal-img").src = "";
     }
 
+    /* 점수 관리 */
     let score = localStorage.getItem("score") ? parseInt(localStorage.getItem("score")) : 100;
     let hint1Used = false, hint2Used = false, answerUsed = false;
 
@@ -352,6 +353,7 @@
   </script>
 </body>
 </html>
+
 
 
 
