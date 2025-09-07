@@ -147,7 +147,7 @@
             localStorage.setItem("score", score);
         }
         function useHint1() {
-            document.getElementById('modalText').innerText = "스플리드힌트1";
+            document.getElementById('modalText').innerText = "스플리드";
             document.getElementById('modal').style.display = "block";
             document.getElementById('hint2').disabled = false;
             if (!hint1Used) {
@@ -156,7 +156,7 @@
             }
         }
         function useHint2() {
-            document.getElementById('modalText').innerText = "스플리드힌트2";
+            document.getElementById('modalText').innerText = "선물이라는 시와 이모티콘의 배치를\n 일치시키면 배경에 보이는 단어가 있을거야.";
             document.getElementById('modal').style.display = "block";
             document.getElementById('answerBtn').disabled = false;
             if (!hint2Used) {
@@ -193,5 +193,6 @@
 </body>
 
 </html>
+
 
 
