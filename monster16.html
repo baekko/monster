@@ -147,7 +147,7 @@
             localStorage.setItem("score", score);
         }
         function useHint1() {
-            document.getElementById('modalText').innerText = "룰베인힌트1";
+            document.getElementById('modalText').innerText = "몬스터북 1페이지의 이용안내\n 그림에서 색깔로 가려진 4군데의\n 글자를 현장의 입간판에서 확인해.";
             document.getElementById('modal').style.display = "block";
             document.getElementById('hint2').disabled = false;
             if (!hint1Used) {
@@ -156,7 +156,7 @@
             }
         }
         function useHint2() {
-            document.getElementById('modalText').innerText = "룰베인힌트2";
+            document.getElementById('modalText').innerText = "일요일의 ‘일’ = 숫자 1";
             document.getElementById('modal').style.display = "block";
             document.getElementById('answerBtn').disabled = false;
             if (!hint2Used) {
@@ -165,7 +165,7 @@
             }
         }
         function showAnswerModal() {
-            document.getElementById('modalText').innerText = "42";
+            document.getElementById('modalText').innerText = "20 + 1 + 20 – 15 = 26";
             document.getElementById('modal').style.display = "block";
             if (!answerUsed) {
                 updateScore(-1);
@@ -193,6 +193,7 @@
 </body>
 
 </html>
+
 
 
 
