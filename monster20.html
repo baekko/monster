@@ -243,7 +243,7 @@
     }
 
     function useHint1() {
-      document.getElementById('modalText').innerText = "몬스터북 1페이지를 보면 오늘의 날짜를 알 수 있어.";
+      document.getElementById('modalText').innerText = "몬스터북 1페이지를 보면\n 오늘의 날짜를 알 수 있어.";
       document.getElementById('modal').style.display = "block";
       document.getElementById('hint2').disabled = false;
       if (!hint1Used) {
@@ -253,7 +253,7 @@
     }
 
     function useHint2() {
-      document.getElementById('modalText').innerText = "도서관은 공휴일이 휴관일이지? 반납일이 휴관일인 경우 어떻게 되지?";
+      document.getElementById('modalText').innerText = "도서관은 공휴일이 휴관일이지?\n 반납일이 휴관일인 경우 어떻게 되지?";
       document.getElementById('modal').style.display = "block";
       document.getElementById('answerBtn').disabled = false;
       if (!hint2Used) {
@@ -292,6 +292,7 @@
   </script>
 </body>
 </html>
+
 
 
 
