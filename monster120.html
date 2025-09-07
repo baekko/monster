@@ -24,20 +24,24 @@
         }
         .score-container {
             position: absolute;
-            top: 400px; /* 상단에서 400px 아래로 배치 */
+            top: 400px;
             left: 50%;
-            transform: translateX(-50%); /* 가운데 정렬 */
-            width: 85%; /* 가로 크기 설정 */
-            max-width: 375px; /* 최대 너비 제한 */
-            background-color: rgba(0, 0, 0, 0.5); /* 배경을 반투명하게 */
+            transform: translateX(-50%);
+            width: 85%;
+            max-width: 375px;
+            background-color: rgba(0, 0, 0, 0.5);
             color: white;
             padding: 5px;
             border-radius: 10px;
             text-align: center;
-            opacity: 0; /* 처음엔 숨김 */
-            visibility: hidden; /* 처음엔 안 보이게 설정 */
-            transition: opacity 1s ease-in-out; /* 부드럽게 나타남 효과 */  
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1s ease-in-out;
             font-size: 14px; 
+        }
+        .rank {  /* 💡 등급 강조 스타일 */
+            color: orange;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -48,44 +52,42 @@
 
     <script>
         window.onload = function() {
-            // 42페이지에서 저장된 점수 가져오기
             let finalScore = Number(localStorage.getItem("score"));
-
             if (isNaN(finalScore)) {
-                finalScore = 100; // 기본값
+                finalScore = 100;
             }
 
-            // 사용 횟수 계산 (100점에서 몇 점 깎였는지 확인)
             let usedCount = 100 - finalScore;
 
-            // 등급 계산
-            let rank;
+            // 칭호 계산
+            let title;
             if (finalScore >= 95) {
-                rank = "S";
+                title = "전설의 수호자";
             } else if (finalScore >= 85) {
-                rank = "A";
-            } else if (finalScore >= 50) {
-                rank = "B";
+                title = "최고의 수호자";
             } else {
-                rank = "c";
+                title = "수호자";
             }
+
             let playerName = localStorage.getItem("playerName") || "플레이어";
-            // 결과 표시
+
+            // 💡 title을 <span class="rank">로 감싸기
             document.getElementById("scoreDetails").innerHTML =
                 `<p><b>${playerName}</b>님은 힌트와 정답보기 총 <b>${usedCount}회</b> 사용으로</p>
                  <p><b>${usedCount}점</b> 차감되어 <b>${finalScore}점</b>을 얻어</p>
-                 <p><b>${rank}등급</b>에 랭크되었습니다.</p>
-                 <p>데스크로 가서 이 화면을 보여주세요.</p>`;
+                 <p><span class="rank"><b>${title}</b></span>가 되었습니다.</p>
+                 <p>데스크로 가서 이 화면을 보여주고 보상을 받으세요.</p>`;
+
             setTimeout(() => {
-            document.getElementById('scoreContainer').style.opacity = "1";
-            document.getElementById('scoreContainer').style.visibility = "visible";
-            }, 3000); 
+                const box = document.getElementById('scoreContainer');
+                box.style.opacity = "1";
+                box.style.visibility = "visible";
+            }, 2000); 
         };
     </script>
-
 </body>
-
 </html>
+
 
 
 
