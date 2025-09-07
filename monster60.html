@@ -22,7 +22,7 @@
       display:flex;justify-content:center;align-items:center;
       position:fixed;bottom:20px;width:100%;
       transform:translate3d(0,0,0);z-index:1000;
-      gap:10px; /* ADD: 버튼 사이 간격 */
+      gap:10px; /* 버튼 사이 간격 */
     }
     .next-button{
       padding:4px 6px;font-size:20px;font-weight:bold;cursor:pointer;
@@ -69,9 +69,9 @@
 </head>
 <body>
   <div class="button-container">
-    <!-- ADD: 새 '모르겠어' 버튼 -->
-    <button class="next-button" id="helpBtn" aria-label="모르겠어">모르겠어</button>
+    <!-- 순서 변경: '열었어'가 왼쪽, '모르겠어'가 오른쪽 -->
     <button class="next-button" onclick="goToNextPage()">열었어</button>
+    <button class="next-button" id="helpBtn" aria-label="모르겠어">모르겠어</button>
   </div>
 
   <!-- 봉인 버튼 -->
@@ -82,7 +82,7 @@
       window.location.href = "https://baekko.github.io/monster/monster61.html";
     }
 
-    // 공용 오버레이 열기 함수 (이미 떠있으면 먼저 닫고 다시 오픈) /* ADD */
+    // 공용 오버레이 열기 함수
     function openOverlay(imgSrc){
       const opened = document.querySelector('.overlay');
       if(opened) opened.remove();
@@ -93,24 +93,24 @@
       document.body.appendChild(overlay);
     }
 
-    // 봉인 버튼: 토글(열기/닫기) — 기존 로직 유지
+    // 봉인 버튼: 토글(열기/닫기)
     const sealBtn = document.getElementById('sealBtn');
     sealBtn.addEventListener('click', toggleSeal);
 
     function toggleSeal(){
       const opened = document.querySelector('.overlay');
       if(opened){
-        opened.remove(); // 이미 떠있으면 닫기
+        opened.remove();
         return;
       }
-      // 없으면 열기
-      openOverlay("monsterindex6.png"); // 변경: 공용 함수 사용 /* ADD */
+      openOverlay("monsterindex6.png");
     }
 
-    // '모르겠어' 버튼: monsterindexopen.png 모달 열기 /* ADD */
+    // '모르겠어' 버튼: monsterindexopen.png 모달 열기
     const helpBtn = document.getElementById('helpBtn');
     helpBtn.addEventListener('click', () => openOverlay("monsterindexopen.png"));
   </script>
 </body>
 </html>
+
 
