@@ -263,7 +263,7 @@
     }
 
     function showAnswerModal() {
-      document.getElementById('modalText').innerText = "0816";
+      document.getElementById('modalText').innerHTML = '<img src="slomo1.png" alt="힌트 1" style="max-width:100%; height:auto; border-radius:5px;">';
       document.getElementById('modal').style.display = "block";
       if (!answerUsed) {
         updateScore(-1);
@@ -292,6 +292,7 @@
   </script>
 </body>
 </html>
+
 
 
 
