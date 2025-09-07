@@ -143,13 +143,13 @@
     function updateScore(points){ score+=points; localStorage.setItem("score",score); }
     function useHint1(){
       modalText.style.display="block"; modalImage.style.display="none";
-      modalText.innerText="룰베인힌트1"; modal.style.display="block";
+      modalText.innerText="도서관 안에서 해서는 안될 행동은 다섯 가지야"; modal.style.display="block";
       document.getElementById('hint2').disabled=false;
       if(!hint1Used){ updateScore(-1); hint1Used=true; }
     }
     function useHint2(){
       modalText.style.display="block"; modalImage.style.display="none";
-      modalText.innerText="룰베인힌트2"; modal.style.display="block";
+      modalText.innerText="안되는 행동은 달리기, 음식섭취,\n 소리지르기, 운동하기, 엉엉울기"; modal.style.display="block";
       document.getElementById('answerBtn').disabled=false;
       if(!hint2Used){ updateScore(-1); hint2Used=true; }
     }
@@ -187,3 +187,4 @@
 </body>
 
 </html>
+
