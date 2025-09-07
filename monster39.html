@@ -147,7 +147,7 @@
             localStorage.setItem("score", score);
         }
         function useHint1() {
-            document.getElementById('modalText').innerText = "에코하울힌트1";
+            document.getElementById('modalText').innerText = "문제의 글자 색깔과 벽에 있는\n 실로폰 색깔이 똑같아.\n 글자 색의 순서대로 실로폰을 연주해볼까?";
             document.getElementById('modal').style.display = "block";
             document.getElementById('hint2').disabled = false;
             if (!hint1Used) {
@@ -156,7 +156,7 @@
             }
         }
         function useHint2() {
-            document.getElementById('modalText').innerText = "에코하울힌트2";
+            document.getElementById('modalText').innerText = "연주했더니 나오는 이 곡... 제목이 뭐더라?";
             document.getElementById('modal').style.display = "block";
             document.getElementById('answerBtn').disabled = false;
             if (!hint2Used) {
@@ -193,5 +193,6 @@
 </body>
 
 </html>
+
 
 
