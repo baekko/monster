@@ -22,9 +22,10 @@
       display:flex;justify-content:center;align-items:center;
       position:fixed;bottom:20px;width:100%;
       transform:translate3d(0,0,0);z-index:1000;
+      gap:10px; /* ADD: 버튼 사이 간격 */
     }
     .next-button{
-      padding:4px 6px;font-size:20px;font-weight:bold;cursor:pointer;
+      padding:4px 6px;font-size:18px;font-weight:bold;cursor:pointer;
       background-color:yellow;color:black;border:none;border-radius:5px;
       transition:background-color .3s;box-shadow:0 4px 6px rgba(0,0,0);
       opacity: 0;
@@ -32,11 +33,11 @@
       animation: showButton 0.5s ease-in forwards;
       animation-delay: 2s;
     }
-    
+
     /* 봉인 버튼: 오른쪽 하단 고정 */
     .seal-button{
       position:fixed;right:50px;bottom:20px;z-index:1001;
-      width:50px;height:50px; /* 다음 버튼 높이 2배 정도 */
+      width:50px;height:50px;
       background:url("monsterbook5.png") center/cover no-repeat;
       background-color:gray;
       border:none;border-radius:6px;cursor:pointer;
@@ -45,7 +46,7 @@
 
     /* 모달: 배경 어둡게 하지 않음(투명) */
     .overlay{
-      position:fixed;inset:0;background:transparent; /* ← 배경 어둡지 않게 */
+      position:fixed;inset:0;background:transparent;
       display:flex;align-items:center;justify-content:center;z-index:2000;
     }
     .overlay img{
@@ -53,12 +54,14 @@
       border-radius:10px;background:transparent;
       box-shadow:0 4px 6px rgba(0, 0, 0);
     }
+
     @keyframes showButton {
-            to {
-                opacity: 1;
-                pointer-events: auto;
-            }
-        }
+      to {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+
     @media (max-width:768px){
       .seal-button{ width:50px;height:50px;right:50px;bottom:18px; }
     }
@@ -66,7 +69,9 @@
 </head>
 <body>
   <div class="button-container">
-    <button class="next-button" onclick="goToNextPage()">열어 볼게!</button>
+    <!-- ADD: 새 '모르겠어' 버튼 -->
+    <button class="next-button" id="helpBtn" aria-label="모르겠어">모르겠어</button>
+    <button class="next-button" onclick="goToNextPage()">열었어</button>
   </div>
 
   <!-- 봉인 버튼 -->
@@ -77,7 +82,18 @@
       window.location.href = "https://baekko.github.io/monster/monster61.html";
     }
 
-    // 봉인 버튼: 토글(열기/닫기)
+    // 공용 오버레이 열기 함수 (이미 떠있으면 먼저 닫고 다시 오픈) /* ADD */
+    function openOverlay(imgSrc){
+      const opened = document.querySelector('.overlay');
+      if(opened) opened.remove();
+      const overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      overlay.innerHTML = `<img src="${imgSrc}" alt="">`;
+      overlay.addEventListener('click', () => overlay.remove());
+      document.body.appendChild(overlay);
+    }
+
+    // 봉인 버튼: 토글(열기/닫기) — 기존 로직 유지
     const sealBtn = document.getElementById('sealBtn');
     sealBtn.addEventListener('click', toggleSeal);
 
@@ -88,14 +104,12 @@
         return;
       }
       // 없으면 열기
-      const overlay = document.createElement('div');
-      overlay.className = 'overlay';
-      overlay.innerHTML = `<img src="monsterindex6.png" alt="Monster Index">`;
-      // 모달 아무 곳이나 터치하면 닫기
-      overlay.addEventListener('click', () => overlay.remove());
-      document.body.appendChild(overlay);
+      openOverlay("monsterindex6.png"); // 변경: 공용 함수 사용 /* ADD */
     }
+
+    // '모르겠어' 버튼: monsterindexopen.png 모달 열기 /* ADD */
+    const helpBtn = document.getElementById('helpBtn');
+    helpBtn.addEventListener('click', () => openOverlay("monsterindexopen.png"));
   </script>
 </body>
-
 </html>
