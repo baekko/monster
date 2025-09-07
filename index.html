@@ -1,38 +1,40 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>몬스터도서관</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            font-family: Courier, sans-serif;
-        }
-        .video-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
-        }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: fixed; /* 버튼을 화면에 고정 */
-            bottom: 20px; /* 화면 하단에 위치 */
-            width: 100%;
-            transform: translate3d(0, 0, 0);
-        }
-        .next-button {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>몬스터도서관</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Courier, sans-serif;
+    }
+    .video-background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .button-container {
+      display: flex; justify-content: center; align-items: center;
+      position: fixed; bottom: 20px; width: 100%;
+      transform: translate3d(0,0,0);
+    }
+
+    /* 버튼과 말풍선을 묶는 래퍼 */
+    .cta {
+      position: relative; /* 말풍선을 버튼 기준으로 배치하기 위해 */
+      display: inline-block;
+    }
+
+    .next-button {
             padding: 4px 6px;
             font-size: 20px;
             font-weight: bold;
-            width: 140px;
+            width: 160px;
             cursor: pointer;
             background-color: yellow; /* 배경만 반투명 */
             color: black;
@@ -44,43 +46,89 @@
             animation: showButton 0s ease-in 10s forwards;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
         }
-        
 
-        @keyframes showButton {
-            to {
-                opacity: 1;
-                visibility: visible;
-            }
-        }
+    /* 말풍선 스타일 */
+    .click-hint {
+      position: absolute;
+      left: 50%; transform: translateX(-50%);
+      bottom: 56px; /* 버튼 위 간격 */
+      background: #e2610c; /* iOS 그린 느낌 */
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,.2);
+      white-space: nowrap;
 
-        /* 모바일에서 버튼 크기와 위치 조정 */
-        @media (max-width: 768px) {
-            .next-button {
-                font-size: 20px;
-                padding: 4px 6px;
-            }
-        }
-    </style>
+      opacity: 0; visibility: hidden;
+      /* 10초 후 나타나고, 10.05초부터 3회 깜빡임 */
+      animation:
+        showHint 0s linear 10s forwards,
+        blink 1s ease-in-out 3 10.05s forwards;
+    }
+    /* 말풍선 꼬리(아래 삼각형) */
+    .click-hint::after {
+      content: "";
+      position: absolute;
+      left: 50%; transform: translateX(-50%);
+      bottom: -8px;
+      width: 0; height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 8px solid #e2610c;
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,.15));
+    }
+
+    @keyframes showButton {
+      to { opacity: 1; visibility: visible; }
+    }
+    @keyframes showHint {
+      to { opacity: 1; visibility: visible; }
+    }
+    @keyframes blink {
+      0%   { opacity: 1; }
+      50%  { opacity: 0; }
+      100% { opacity: 1; } /* 3회 반복 후 보이는 상태로 유지 */
+    }
+
+    /* 모바일 */
+    @media (max-width: 768px) {
+      .next-button { font-size: 20px; padding: 4px 6px; }
+      .click-hint { font-size: 15px; bottom: 52px; }
+    }
+
+    /* 접근성: 모션 줄이기 선호 시 깜빡임 비활성화 */
+    @media (prefers-reduced-motion: reduce) {
+      .click-hint { animation: showHint 0s linear 10s forwards; }
+    }
+  </style>
 </head>
 <body>
-    <video class="video-background" autoplay muted playsinline id="bg-video">
-        <source src="monster1.mp4" type="video/mp4">  <!-- 망고보드 동영상 URL 넣기 -->
-    </video>
-    
-    <div class="button-container">
-        <button class="next-button" onclick="goToNextPage()">어떻게 해야 해?</button>
+  <video class="video-background" autoplay muted playsinline id="bg-video">
+    <source src="monster1.mp4" type="video/mp4">
+  </video>
+
+  <div class="button-container">
+    <div class="cta">
+      <!-- 말풍선 -->
+      <div class="click-hint">여기를 클릭하세요!</div>
+      <!-- 버튼 -->
+      <button class="next-button" onclick="goToNextPage()">어떻게 해야 해?</button>
     </div>
-    
-    <script>  
-        function goToNextPage() {
-            window.location.href = "https://baekko.github.io/monster/monster4.html"; // 이동할 페이지 설정
-        }
-        document.getElementById('bg-video').onended = function() {
-            this.pause(); // 동영상 재생이 끝나면 정지
-        };
-    </script>
+  </div>
+
+  <script>
+    function goToNextPage() {
+      window.location.href = "https://baekko.github.io/monster/monster4.html";
+    }
+    document.getElementById('bg-video').onended = function () {
+      this.pause();
+    };
+  </script>
 </body>
 </html>
+
 
 
 
