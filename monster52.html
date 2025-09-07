@@ -147,7 +147,7 @@
             localStorage.setItem("score", score);
         }
         function useHint1() {
-            document.getElementById('modalText').innerText = "러미힌트1";
+            document.getElementById('modalText').innerText = "거울을 통해 고양이가 책을 읽고 있는\n 포스터의 글자를 자세히 봐.";
             document.getElementById('modal').style.display = "block";
             document.getElementById('hint2').disabled = false;
             if (!hint1Used) {
@@ -156,7 +156,7 @@
             }
         }
         function useHint2() {
-            document.getElementById('modalText').innerText = "러미힌트2";
+            document.getElementById('modalText').innerText = "거울을 통해 읽었을 때 제대로 읽히는\n 글자가 4개 있어.";
             document.getElementById('modal').style.display = "block";
             document.getElementById('answerBtn').disabled = false;
             if (!hint2Used) {
@@ -193,5 +193,6 @@
 </body>
 
 </html>
+
 
 
