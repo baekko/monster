@@ -39,7 +39,7 @@
             transition: opacity 1s ease-in-out;
             font-size: 14px; 
         }
-        .rank {  /* 💡 등급 강조 스타일 */
+        .rank {  
             color: orange;
             font-weight: bold;
         }
@@ -52,12 +52,20 @@
 
     <script>
         window.onload = function() {
-            let finalScore = Number(localStorage.getItem("score"));
-            if (isNaN(finalScore)) {
-                finalScore = 100;
-            }
+            // 1) 원본 값 가져오기
+            const raw = localStorage.getItem("score");
 
-            let usedCount = 100 - finalScore;
+            // 2) 값이 없으면 100으로 기본값
+            let finalScore = (raw === null || raw === undefined || raw === "")
+              ? 100
+              : Number(raw);
+
+            // 3) 숫자 아닌 값 방지 + 범위 보호
+            if (Number.isNaN(finalScore)) finalScore = 100;
+            finalScore = Math.min(100, Math.max(0, finalScore));
+
+            // 4) 사용 횟수 계산 (음수 방지)
+            const usedCount = Math.max(0, 100 - finalScore);
 
             // 칭호 계산
             let title;
@@ -69,14 +77,13 @@
                 title = "수호자";
             }
 
-            let playerName = localStorage.getItem("playerName") || "플레이어";
+            const playerName = localStorage.getItem("playerName") || "플레이어";
 
-            // 💡 title을 <span class="rank">로 감싸기
             document.getElementById("scoreDetails").innerHTML =
-                `<p><b>${playerName}</b>님은 힌트와 정답보기 총 <b>${usedCount}회</b> 사용으로</p>
-                 <p><b>${usedCount}점</b> 차감되어 <b>${finalScore}점</b>을 얻어</p>
-                 <p><span class="rank"><b>${title}</b></span>가 되었습니다.</p>
-                 <p>데스크로 가서 이 화면을 보여주고 보상을 받으세요.</p>`;
+              `<p><b>${playerName}</b>님은 힌트와 정답보기 총 <b>${usedCount}회</b> 사용으로</p>
+               <p><b>${usedCount}점</b> 차감되어 <b>${finalScore}점</b>을 얻어</p>
+               <p><span class="rank"><b>${title}</b></span>가 되었습니다.</p>
+               <p>데스크로 가서 이 화면을 보여주고 보상을 받으세요.</p>`;
 
             setTimeout(() => {
                 const box = document.getElementById('scoreContainer');
@@ -87,6 +94,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
