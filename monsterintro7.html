@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정답 입력</title>
+    <style>
+        html, body {
+           height: 100%;
+           overflow: hidden;
+           margin: 0;
+           padding: 0;
+       }
+        body {
+            background-image: url("intro 8.jpg"); 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.4); /* 배경만 반투명 */
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            max-width: 375px;
+            flex-direction: column;
+            align-items: center;
+        }
+        .button-container {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+     
+        .input-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: center;
+        }
+        input {
+            padding: 8px;
+            font-size: 14px;
+            width: 60%;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+            caret-color: orange; /* 커서를 주황색으로 변경 */
+
+        }
+        button {
+            padding: 4px 6px;
+            width: 65px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            background-color: orange;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.466);
+        }
+        button:disabled {
+            background-color: rgb(109, 93, 93) !important;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+    
+        .modal-content {
+            text-align: center;
+        }
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .container {
+                width: 80%;
+                padding: 10px;
+            }
+            input {
+                font-size: 12px;
+                width: 60%;
+            }
+            button {
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="text" id="answer">
+        <button onclick="checkAnswer()">입력</button>
+    </div>   
+    <div class="button-container">
+        <button id="hint1" onclick="useHint1()">힌트 1</button>
+        <button id="hint2" onclick="useHint2()" disabled>힌트 2</button>
+        <button id="answerBtn" onclick="showAnswerModal()" disabled>정답 보기</button>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="modalText"></p>
+        </div>
+    </div>
+    
+    <script>        
+        function useHint1() {
+            document.getElementById('modalText').innerText = "물음표 색깔이 중요해.\n 전단지에도 물음표와 같은 색의\n 글자들이 보이네.";
+            document.getElementById('modal').style.display = "block";
+            document.getElementById('hint2').disabled = false;
+        }
+        function useHint2() {
+            document.getElementById('modalText').innerText = "분명 한글인데... 영어로도 읽히네?";
+            document.getElementById('modal').style.display = "block";
+            document.getElementById('answerBtn').disabled = false;
+        }
+        function showAnswerModal() {
+            document.getElementById('modalText').innerText = "hello";
+            document.getElementById('modal').style.display = "block";
+        }
+        function closeModal() {
+            document.getElementById('modal').style.display = "none";
+        }
+        function checkAnswer() {
+            var answer = document.getElementById('answer').value.trim().toLowerCase();
+            var correctAnswer = "hello".toLowerCase();
+            if (answer === correctAnswer) {
+                window.location.href = "https://baekko.github.io/monster/monsterintro8.html";
+            } else {
+                document.getElementById('modalText').innerText = "오답";
+                document.getElementById('modal').style.display = "block";
+            }
+        }
+    </script>
+</body>
+
+</html>
