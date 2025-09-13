@@ -1,99 +1,141 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>최종 결과</title>
-    <style>
-        html, body {
-           height: 100%;
-           overflow: hidden;
-           margin: 0;
-           padding: 0;
-       }
-        body {
-            background-image: url("monster120.jpg"); 
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-            font-family: Arial, sans-serif;
-        }
-        .score-container {
-            position: absolute;
-            top: 400px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 85%;
-            max-width: 375px;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            padding: 5px;
-            border-radius: 10px;
-            text-align: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 1s ease-in-out;
-            font-size: 14px; 
-        }
-        .rank {  
-            color: orange;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>최종 결과</title>
+  <style>
+    /* ====== 전역 설정 ====== */
+    :root {
+      --vh: 1vh;          /* 구형 브라우저 폴백용 단위 (JS로 실제값 주입) */
+      --score-pos: 75;     /* ★ 점수 박스 세로 위치(퍼센트). 60=화면 높이의 60% */
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-image: url("monster120.jpg");
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+    }
+
+    /* ====== 점수 박스 ====== */
+    .score-container {
+      position: fixed;                 /* 화면 기준 고정 */
+      left: 50%;
+      /* 기본값: JS로 주입한 --vh를 이용 (svh 미지원 기기 폴백) */
+      top: calc(var(--vh) * var(--score-pos));
+      transform: translate(-50%, -50%);/* 요소의 '중심'을 지정 위치에 맞춤 */
+      z-index: 10;
+
+      width: 85%;
+      max-width: 375px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1s ease-in-out;
+      font-size: 14px;
+       line-height: 0.5;  /* ← 줄간격. 기본은 1.2~1.4 정도 */
+
+      /* 노치/홈 인디케이터 안전영역 */
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      padding-left: calc(10px + env(safe-area-inset-left));
+      padding-right: calc(10px + env(safe-area-inset-right));
+    }
+
+    /* 최신 브라우저는 안정 뷰포트(svh) 사용 */
+    @supports (height: 100svh) {
+      .score-container {
+        top: calc(var(--score-pos) * 1svh); /* 예: 60svh */
+      }
+    }
+
+    .rank { color: orange; font-weight: bold; }
+  </style>
 </head>
 <body>
-    <div class="score-container" id="scoreContainer">
-        <p id="scoreDetails"></p>
-    </div>
+  <div class="score-container" id="scoreContainer">
+    <p id="scoreDetails"></p>
+  </div>
 
-    <script>
-        window.onload = function() {
-            // 1) 원본 값 가져오기
-            const raw = localStorage.getItem("score");
+  <script>
+    /* ====== 구형 브라우저 폴백: --vh에 실제 화면 높이 반영 ====== */
+    function setVHVar() {
+      // 주소창/툴바 제외 실제 가시 높이 사용
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    // 초기 2번 호출: 로드 직후 + 한 프레임 뒤 (모바일 주소창 애니메이션 대비)
+    setVHVar();
+    requestAnimationFrame(setVHVar);
 
-            // 2) 값이 없으면 100으로 기본값
-            let finalScore = (raw === null || raw === undefined || raw === "")
-              ? 100
-              : Number(raw);
+    // 회전/리사이즈/주소창 변화 등 대응
+    window.addEventListener('resize', setVHVar);
+    window.addEventListener('orientationchange', setVHVar);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) setVHVar();
+    });
 
-            // 3) 숫자 아닌 값 방지 + 범위 보호
-            if (Number.isNaN(finalScore)) finalScore = 100;
-            finalScore = Math.min(100, Math.max(0, finalScore));
+    /* ====== 점수 계산/표시 로직 (기존과 동일) ====== */
+    window.onload = function () {
+      // 1) 원본 값 가져오기
+      const raw = localStorage.getItem("score");
 
-            // 4) 사용 횟수 계산 (음수 방지)
-            const usedCount = Math.max(0, 100 - finalScore);
+      // 2) 값이 없으면 100으로 기본값
+      let finalScore = (raw === null || raw === undefined || raw === "")
+        ? 100
+        : Number(raw);
 
-            // 칭호 계산
-            let title;
-            if (finalScore >= 95) {
-                title = "전설의 수호자";
-            } else if (finalScore >= 85) {
-                title = "최고의 수호자";
-            } else {
-                title = "수호자";
-            }
+      // 3) 숫자 아닌 값 방지 + 범위 보호
+      if (Number.isNaN(finalScore)) finalScore = 100;
+      finalScore = Math.min(100, Math.max(0, finalScore));
 
-            const playerName = localStorage.getItem("playerName") || "플레이어";
+      // 4) 사용 횟수 계산 (음수 방지)
+      const usedCount = Math.max(0, 100 - finalScore);
 
-            document.getElementById("scoreDetails").innerHTML =
-              `<p><b>${playerName}</b>님은 힌트와 정답보기 총 <b>${usedCount}회</b> 사용으로</p>
-               <p><b>${usedCount}점</b> 차감되어 <b>${finalScore}점</b>을 얻어</p>
-               <p><span class="rank"><b>${title}</b></span>가 되었습니다.</p>
-               <p>데스크로 가서 이 화면을 보여주고 보상을 받으세요.</p>`;
+      // 칭호 계산
+      let title;
+      if (finalScore >= 95) {
+        title = "전설의 수호자";
+      } else if (finalScore >= 85) {
+        title = "최고의 수호자";
+      } else {
+        title = "수호자";
+      }
 
-            setTimeout(() => {
-                const box = document.getElementById('scoreContainer');
-                box.style.opacity = "1";
-                box.style.visibility = "visible";
-            }, 2000); 
-        };
-    </script>
+      const playerName = localStorage.getItem("playerName") || "플레이어";
+
+      document.getElementById("scoreDetails").innerHTML =
+        `<p><b>${playerName}</b>님은 힌트와 정답보기 총 <b>${usedCount}회</b> 사용으로</p>
+         <p><b>${usedCount}점</b> 차감되어 <b>${finalScore}점</b>을 얻어</p>
+         <p><span class="rank"><b>${title}</b></span>가 되었습니다.</p>
+         <p>데스크로 가서 이 화면을 보여주고</p>
+         <p>  보상을 받으세요.</p>`;
+
+      setTimeout(() => {
+        const box = document.getElementById('scoreContainer');
+        box.style.opacity = "1";
+        box.style.visibility = "visible";
+      }, 2000);
+    };
+  </script>
 </body>
 </html>
+
 
 
 
