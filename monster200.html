@@ -47,7 +47,7 @@
   }
   .nav.show{ visibility:visible; opacity:1; }
   .navbtn{
-    padding:4px 6px;font-size:20px;font-weight:bold;width:120px;cursor:pointer;
+    padding:4px 6px;font-size:20px;font-weight:bold;width:130px;cursor:pointer;
     background-color:yellow; color:black; border:none;border-radius:5px;
     transition:background-color .3s;box-shadow:0 4px 6px rgba(0,0,0);
   }
@@ -109,8 +109,8 @@
 
 <script>
 (function(){
-  const INITIAL_DELAY = 7000;  // 페이지 로딩 후 첫 말풍선까지 대기
-  const DISPLAY_TIME  = 5000;  // 각 말풍선 유지 시간
+  const INITIAL_DELAY = 4000;  // 페이지 로딩 후 첫 말풍선까지 대기
+  const DISPLAY_TIME  = 3000;  // 각 말풍선 유지 시간
   const GAP = 6;
 
   const buttons = document.querySelector(".button-container");
@@ -119,17 +119,17 @@
 setTimeout(()=>{
   uiBox.classList.remove("ui-hidden"); uiBox.classList.add("ui-show");
   buttons.classList.remove("ui-hidden"); buttons.classList.add("ui-show");
-}, 4000);
+}, 2000);
 
   // 기존 1~6 + 7번째(꼬리없음/아래 배치)
   const steps = [
     { target:"#answer",    pos:"top", text:"1. 먼저 답을 아래 흰색 창에 입력해", offsetY:2 },
     { target:"#submitBtn", pos:"top", text:"2. 답을 입력했으면 입력 버튼을 눌러" },
     { target:"#hint1",     pos:"top", text:"잘 모를 때는 힌트를 사용할 수 있어 -1점" },
-    { target:"#hint2",     pos:"top", text:"두 번째 힌트는 첫 번째 힌트를 보고 난 후 사용할 수 있어 -1점" },
-    { target:"#answerBtn", pos:"top", text:"정답 보기는 모든 힌트를 보고 난 후 사용할 수 있어 -1점" },
+    { target:"#hint2",     pos:"top", text:"첫 번째 힌트를 사용해야 볼 수 있어 -1점" },
+    { target:"#answerBtn", pos:"top", text:"모든 힌트를 사용해야 볼 수 있어 -1점" },
     { target:"#scoreBtn",  pos:"top", text:"점수 보기는 언제든 확인할 수 있어" },
-    { free:true, text:"문제마다 답을 입력하는 방식이 다를 수 있는데 그건 그때마다 알려줄게!"}
+    { free:true, text:"정답 입력 방법이 다른건 그때 얄려줄게!"}
   ];
 
   const bubble = document.getElementById("bubble");
@@ -283,7 +283,7 @@ setTimeout(()=>{
   });
 
   // 원본 링크 유지
-  nextBtn.addEventListener("click", ()=> location.href = "https://baekko.github.io/monster/monster300.html");
+  nextBtn.addEventListener("click", ()=> location.href = "https://baekko.github.io/monster/monster14.html");
   restartBtn.addEventListener("click", ()=>{
     ++runStamp;           // 이전 타이머/콜백 전부 무효화
     clearTimeout(timer);
@@ -300,6 +300,7 @@ setTimeout(()=>{
 </script>
 </body>
 </html>
+
 
 
 
